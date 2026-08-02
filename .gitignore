@@ -5,3 +5,16 @@ datasets/*
 # tools
 tools/formatter
 tools/formatter.exe
+
+# virtual environments
+venv/
+env/
+
+# Python artifacts
+__pycache__?
+*.pyc
+*.pyo
+*.pyd
+
+# Models and adapters
+kestrel-*
