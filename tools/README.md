@@ -27,3 +27,10 @@ There are several command line flags which can be seen by adding the flag `-help
 | -b                | true                          | Bidirectional. Whether to generate prompts in both directions, or just user->assistant.
 | -o                | "datasets/{al}{ul}{b}.jsonl"  | Output name and path. Defaults to using the Assistant and User languages + whether the resulting data is bidirectional.
 | -s                | true                          | Whether to shuffle the output. Defaults to true.
+
+### 1.4 Example flags
+
+To recreate the .jsonl datasets used in training, enter the following flags with your command:
+`-ad MorisienMT/train.en-cr.en -al "English" -ud MorisienMT/train.en-cr.cr -ul "Mauritian Creole" -b=true`
+
+`-ad MorisienMT/train.fr-cr.fr -al "French" -ud MorisienMT/train.fr-cr.cr -ul "Mauritian Creole" -b=true`
