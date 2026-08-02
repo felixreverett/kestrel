@@ -51,7 +51,7 @@ model = AutoModelForCausalLM.from_pretrained(
   use_cache=False,
 )
 
-model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
+model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
 
 print("[Kestrel] Injecting LoRA adapters...")
 
