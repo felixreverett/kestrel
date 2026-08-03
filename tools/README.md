@@ -34,3 +34,29 @@ To recreate the .jsonl datasets used in training, enter the following flags with
 `-ad MorisienMT/train.en-cr.en -al "English" -ud MorisienMT/train.en-cr.cr -ul "Mauritian Creole" -b=true`
 
 `-ad MorisienMT/train.fr-cr.fr -al "French" -ud MorisienMT/train.fr-cr.cr -ul "Mauritian Creole" -b=true`
+
+## 2 train.py
+
+## 3 merge.py
+
+### 3.1 What is merge.py?
+
+The merge script is used to merge trained adapter weights back into the base model as part of the fine-tuning pipeline. As such, the train script must first be used to produce an adapter.
+
+### 3.2 Usage instructions
+
+To merge your adapter weights back into the base model, first ensure your python environment is activated. If not, activate it with:
+
+`conda activate kestrel`
+
+Next, run the script with the below command. The script will look for a `kestrel_config.json` file within the adapter's directory to automatically detect the model, meaning -m is not required.
+
+`python tools/merge.py {-m 4.1-3b} -a kestrel-4.1-3b -o kestrel-4.1-3b-final`
+
+### 3.3 Command-line flags
+
+| Command line Flag | Default Value                 | Comments
+| :---------------- | :---------------------------- | :--
+| -m                | "4.1-8b"                      | The base model. Should match that used for training
+| -a                | "kestrel-4.1-8b"              | The adapter weights to merge back into the base model
+| -o                | "kestrel-4.1-8b-final"        | The final output folder name for the models/ subdirectory
