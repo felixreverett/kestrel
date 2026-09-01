@@ -109,6 +109,7 @@ def main():
     quantization_config=bnb_config,
     device_map="cuda:0",
     use_cache=False,
+    low_cpu_mem_usage=True,
   )
 
   model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
@@ -128,10 +129,13 @@ def main():
     task_type="CAUSAL_LM"
   )
 
+  batch_size = int(args.batchsize)
+  grad_accum = 8 if batch_size == 1 else 4
+
   training_args = SFTConfig(
     output_dir=output_dir,
-    per_device_train_batch_size=args.batchsize,
-    gradient_accumulation_steps=4,
+    per_device_train_batch_size=batch_size,
+    gradient_accumulation_steps=grad_accum,
     learning_rate=2e-4,
     logging_steps=10,
     max_steps=args.maxsteps,
@@ -140,7 +144,8 @@ def main():
     loss_type="nll",
     router_aux_loss_coef=0.0,
     save_strategy="steps",
-    save_steps=50,
+    save_steps=100,
+    gradient_checkpointing_kwargs={"use_reentrant": False},
   )
 
   # ==================================================
@@ -162,7 +167,16 @@ def main():
   # ==================================================
 
   print("[Kestrel] Starting training...")
-  trainer.train()
+
+  # Check if a checkpoint exists to resume automatically
+  last_checkpoint = None
+  if os.path.isdir(output_dir):
+    checkpoints = [os.path.join(output_dir, d) for d in os.listdir(output_dir) if d.startswith("checkpoint-")]
+    if checkpoints:
+      last_checkpoint = sorted(checkpoints, key=lambda x: int(x.split("-")[-1]))[-1]
+      print(f"[Kestrel] Found existing checkpoint! Resuming from: {last_checkpoint}")
+
+  trainer.train(resume_from_checkpoint=last_checkpoint)
 
   print(f"[Kestrel] Saving final adapter to {output_dir}...")
   if trainer.model is not None:
