@@ -4,6 +4,7 @@ import os
 import argparse
 import json
 import torch
+from dataclasses import dataclass, field, asdict
 from datasets import load_dataset
 from transformers import (
   AutoModelForCausalLM,
@@ -13,6 +14,67 @@ from transformers import (
 from peft import LoraConfig, prepare_model_for_kbit_training
 from trl.trainer.sft_trainer import SFTTrainer
 from trl.trainer.sft_config import SFTConfig
+from typing import Literal
+
+
+# ==================================================
+# Configs
+# ==================================================
+
+@dataclass
+class BnbConfig:
+  load_in_4bit: bool = True
+  bnb_4bit_use_double_quant: bool = True
+  bnb_4bit_quant_type: str = "nf4"
+  bnb_4bit_compute_dtype: str = "bfloat16"
+
+@dataclass
+class LoraHyperConfig:
+  r: int = 16
+  lora_alpha: int = 32
+  target_modules: list = field(default_factory=lambda: ["q_proj", "k_proj", "v_proj", "o_proj"])
+  lora_dropout: float = 0.05
+  bias: Literal["none", "all", "lora_only"] = "none"
+  task_type: str = "CAUSAL_LM"
+
+@dataclass
+class TrainingHyperConfig:
+  per_device_train_batch_size: int = 2
+  gradient_accumulation_steps: int = 4
+  learning_rate: float = 2e-4
+  logging_steps: int = 10
+  max_steps: int = -1
+  optim: str = "paged_adamw_8bit"
+  bf16: bool = True
+  loss_type: str = "nll"
+  save_strategy: str = "steps"
+  save_steps: int = 100
+  max_seq_length: int = 512
+
+@dataclass
+class KestrelConfig:
+  model: str = "4.1-3b"
+  dataset: str = "English-Mauritian Creole-bidirectional.jsonl"
+  output_dir: str = ""
+  bnb: BnbConfig = field(default_factory=BnbConfig)
+  lora: LoraHyperConfig = field(default_factory=LoraHyperConfig)
+  training: TrainingHyperConfig = field(default_factory=TrainingHyperConfig)
+
+  @classmethod
+  def from_json(cls, json_path: str):
+    """Hydrates the nested struct objects safely from a JSON file."""
+    with open(json_path, "r") as f:
+      data = json.load(f)
+
+    if "bnb" in data:
+      data["bnb"] = BnbConfig(**data["bnb"])
+    if "lora" in data:
+      data["lora"] = LoraHyperConfig(**data["lora"])
+    if "training" in data:
+      data["training"] = TrainingHyperConfig(**data["training"])
+
+    return cls(**data)
+
 
 # ==================================================
 # List of possible models. To add a model option,
@@ -24,6 +86,7 @@ MODEL_REGISTRY= {
   "4.1-8b": "ibm-granite/granite-4.1-8b-base",
   "3.0-3b": "ibm-granite/granite-3.0-3b-a800m-base"
 }
+
 
 # ==================================================
 # Main method:
@@ -44,6 +107,7 @@ def main():
   # ==================================================
 
   parser = argparse.ArgumentParser(description="Fine-tune IBM Granite")
+  parser.add_argument("-c", "--config", default=None, help="Path to JSON config. Overrides all other flags if provided")
   parser.add_argument("-m", "--model", choices=MODEL_REGISTRY.keys(), default="4.1-3b", help="Select model")
   parser.add_argument("-d", "--dataset", default="English-Mauritian Creole-bidirectional.jsonl", help="Dataset filename from datasets folder")
   parser.add_argument("-o", "--output", default=None, help="Output directory name for adapter")
@@ -51,20 +115,34 @@ def main():
   parser.add_argument("-ms", "--maxsteps", default=-1, help="Max steps for training. Default -1 to ignore")
   args = parser.parse_args()
 
-  if args.output is None:
-    args.output = f"adapters/kestrel-{args.model}"
+  # ==================================================
+  # Build configs
+  # ==================================================
+
+  if args.config and os.path.exists(args.config):
+    print(f"[Kestrel] Loading hyperparameters from config file: {args.config}")
+    cfg = KestrelConfig.from_json(args.config)
+  else:
+    cfg = KestrelConfig(
+      model=args.model,
+      dataset=args.dataset,
+      output_dir=args.output or f"adapters/kestrel-{args.model}"
+    )
+    cfg.training.per_device_train_batch_size = int(args.batchsize)
+    cfg.training.gradient_accumulation_steps = 8 if int(args.batchsize) == 1 else 4
+    cfg.training.max_steps = int(args.maxsteps)
 
   # ==================================================
   # Set variables based on flags
   # ==================================================
 
-  model_id = MODEL_REGISTRY[args.model]
+  model_id = MODEL_REGISTRY[cfg.model]
 
   script_dir = os.path.dirname(os.path.abspath(__file__))
   project_root = os.path.abspath(os.path.join(script_dir, ".."))
   
-  dataset_path = os.path.join(project_root, "datasets", args.dataset)
-  output_dir = os.path.join(project_root, args.output)
+  dataset_path = os.path.join(project_root, "datasets", cfg.dataset)
+  output_dir = os.path.join(project_root, cfg.output_dir or f"adapters/kestrel-{cfg.model}")
 
   print(f"[Kestrel] Using model: {model_id}")
   print(f"[Kestrel] Loading tokeniser...")
@@ -88,7 +166,7 @@ def main():
 
   def format_chat(example):
     text = tokenizer.apply_chat_template(example["messages"], tokenize=False)
-    return tokenizer(text, truncation=True, max_length=512)
+    return tokenizer(text, truncation=True, max_length=cfg.training.max_seq_length)
 
   dataset = dataset.map(format_chat, batched=False, remove_columns=dataset.column_names)
 
@@ -97,11 +175,14 @@ def main():
   # ==================================================
 
   print("[Kestrel] Configuring 4-bit quantisation and loading model...")
+
+  compute_dtype = torch.bfloat16 if cfg.bnb.bnb_4bit_compute_dtype == "bfloat16" else torch.float16
+
   bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.bfloat16
+    load_in_4bit=cfg.bnb.load_in_4bit,
+    bnb_4bit_use_double_quant=cfg.bnb.bnb_4bit_use_double_quant,
+    bnb_4bit_quant_type=cfg.bnb.bnb_4bit_quant_type,
+    bnb_4bit_compute_dtype=compute_dtype
   )
 
   model = AutoModelForCausalLM.from_pretrained(
@@ -121,30 +202,27 @@ def main():
   print("[Kestrel] Injecting LoRA adapters...")
 
   lora_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
-    lora_dropout=0.05,
-    bias="none",
-    task_type="CAUSAL_LM"
+    r=cfg.lora.r,
+    lora_alpha=cfg.lora.lora_alpha,
+    target_modules=cfg.lora.target_modules,
+    lora_dropout=cfg.lora.lora_dropout,
+    bias=cfg.lora.bias,
+    task_type=cfg.lora.task_type
   )
-
-  batch_size = int(args.batchsize)
-  grad_accum = 8 if batch_size == 1 else 4
 
   training_args = SFTConfig(
     output_dir=output_dir,
-    per_device_train_batch_size=batch_size,
-    gradient_accumulation_steps=grad_accum,
-    learning_rate=2e-4,
-    logging_steps=10,
-    max_steps=args.maxsteps,
-    optim="paged_adamw_8bit",
-    bf16=True,
-    loss_type="nll",
-    router_aux_loss_coef=0.0,
-    save_strategy="steps",
-    save_steps=100,
+    per_device_train_batch_size=cfg.training.per_device_train_batch_size,
+    gradient_accumulation_steps=cfg.training.gradient_accumulation_steps,
+    learning_rate=cfg.training.learning_rate,
+    logging_steps=cfg.training.logging_steps,
+    max_steps=cfg.training.max_steps,
+    optim=cfg.training.optim,
+    bf16=cfg.training.bf16,
+    loss_type=cfg.training.loss_type,
+    save_strategy=cfg.training.save_strategy,
+    save_steps=cfg.training.save_steps,
+    max_length=cfg.training.max_seq_length,
     gradient_checkpointing_kwargs={"use_reentrant": False},
   )
 
@@ -155,7 +233,7 @@ def main():
   print("[Kestrel] Initialising trainer...")
 
   trainer = SFTTrainer(
-    model=model,# type: ignore
+    model=model,
     train_dataset=dataset,
     peft_config=lora_config,
     processing_class=tokenizer,
@@ -189,10 +267,15 @@ def main():
 
   config_path = os.path.join(output_dir, "kestrel_config.json")
   with open(config_path, "w") as f:
-    json.dump({"model_shortcut": args.model, "base_model_id": model_id}, f, indent=2)
+    json.dump({
+        "model_shortcut": cfg.model, 
+        "base_model_id": model_id,
+        "hyperparameters": asdict(cfg)
+    }, f, indent=2)
+  
   print(f"[Kestrel] Saved training config to {config_path}")
 
-  print("[Kestrel] Test run complete. Ending program.")
+  print("[Kestrel] Training complete. Ending program.")
 
 if __name__ == "__main__":
   main()
