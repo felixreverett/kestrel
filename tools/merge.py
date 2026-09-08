@@ -1,7 +1,9 @@
 # tools/merge.py
 
 import os
+import sys
 import json
+import logging
 import argparse
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -19,13 +21,17 @@ MODEL_REGISTRY = {
 }
 
 def main():
+  logger = logging.getLogger(__name__)
+  logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+
   parser = argparse.ArgumentParser(description="Merge LoRA adapters into base model")
-  parser.add_argument("-m", "--model", choices=MODEL_REGISTRY.keys(), default=None, help="Base model shortcut. If omitted, auto-detected from the adapter's kestrel_config.json")
-  parser.add_argument("-a", "--adapter", default="kestrel-4.1-8b", help="Directory name of trained adapter")
-  parser.add_argument("-o", "--output", default="kestrel-4.1-8b-final", help="Output directory for merged model")
+  parser.add_argument("-m", "--model", choices=MODEL_REGISTRY.keys(), default=None, help="Base model shortcut. Auto-detected if omitted.")
+  parser.add_argument("-a", "--adapter", required=True, help="Directory name of trained adapter")
+  parser.add_argument("-o", "--output", default=None, help="Output directory for merged model")
   args = parser.parse_args()
 
-  base_model_id = MODEL_REGISTRY[args.model]
+  if args.output is None:
+    args.output = f"{args.adapter}-final"
 
   # ==================================================
   # Resolve paths relative to tools/
@@ -37,32 +43,61 @@ def main():
   adapter_dir = os.path.join(project_root, "adapters", args.adapter)
   output_dir = os.path.join(project_root, "models", args.output)
 
+  if not os.path.exists(adapter_dir):
+    logger.error(f"[Kestrel] ERROR: Adapter directory not found at {adapter_dir}")
+    sys.exit(1)
+
   # ==================================================
-  # Look for training-time config saved by train.py
+  # Look for training-time config to validate model
   # ==================================================
 
-  config_path = os.path.join(adapter_dir, "kestrel_config.json")
-  saved_shortcut = None
+  kestrel_config_path = os.path.join(adapter_dir, "kestrel_config.json")
+  peft_config_path = os.path.join(adapter_dir, "adapter_config.json")
 
-  if os.path.exists(config_path):
-    with open(config_path) as f:
-      saved_shortcut = json.load(f).get("model_shortcut")
+  detected_base_model_id = None
 
-  if args.model is None:
-    if saved_shortcut is not None:
-      args.model = saved_shortcut
-      print(f"[Kestrel] Auto-detected base model from adapter config: {args.model}")
-    else:
-      args.model = "4.1-8b"
-      print(f"[Kestrel] No kestrel_config.json found in adapter dir, defaulting to {args.model}")
-  elif saved_shortcut is not None and saved_shortcut != args.model:
-    print(f"[Kestrel] WARNING: adapter was trained with '{saved_shortcut}' but model '-m {args.model} was specified'. Proceeding with '{args.model}'; this will likely produce a broken merge.")
+  if os.path.exists(kestrel_config_path):
+    with open(kestrel_config_path, "r") as f:
+      config_data = json.load(f)
+      detected_base_model_id = config_data.get("base_model_id")
+      logger.info(f"[Kestrel] Found kestrel_config.json. Trained base model: {detected_base_model_id}")
 
+  elif os.path.exists(peft_config_path):
+    with open(peft_config_path, "r") as f:
+      config_data = json.load(f)
+      detected_base_model_id = config_data.get("base_model_name_or_path")
+      logger.info(f"[Kestrel] Found adapter_config.json. Trained base model: {detected_base_model_id}")
+
+  else:
+    logger.error(f"[Kestrel] ERROR: No config file found in {adapter_dir}. Cannot validate adapter weights.")
+    sys.exit(1)
+
+  # ==================================================
+  # Strict validation guardrail
+  # ==================================================
+  
+  if args.model:
+    requested_base_model_id = MODEL_REGISTRY[args.model]
+    if requested_base_model_id != detected_base_model_id:
+      logger.critical(f"""\n[Kestrel] CRITICAL ERROR: Model mismatch!
+        \n - Adapter was trained on : {detected_base_model_id}
+        \n - You requested to merge : {requested_base_model_id}
+        \nAborting process to prevent corrupted weights.\n""")
+      sys.exit(1)
+    base_model_id = requested_base_model_id
+
+  else:
+    if detected_base_model_id not in MODEL_REGISTRY.values():
+      logger.error(f"[Kestrel] ERROR: Detected model '{detected_base_model_id}' not in MODEL_REGISTRY.")
+      sys.exit(1)
+    base_model_id = detected_base_model_id
+    logger.info(f"[Kestrel] Auto-detected base model ID: {base_model_id}")
+  
   # ==================================================
   # Load base model
   # ==================================================
 
-  print(f"[Kestrel] Loading original base model: {base_model_id}")
+  logger.info(f"[Kestrel] Loading original base model: {base_model_id}")
   base_model = AutoModelForCausalLM.from_pretrained(
     base_model_id,
     torch_dtype=torch.bfloat16,
@@ -71,17 +106,17 @@ def main():
 
   tokenizer = AutoTokenizer.from_pretrained(base_model_id)
   
-  print(f"[Kestrel] Loading trained adapters from {adapter_dir}...")
+  logger.info(f"[Kestrel] Loading trained adapters from {adapter_dir}...")
   model = PeftModel.from_pretrained(base_model, adapter_dir)
 
-  print("[Kestrel] Merging weights...")
+  logger.info("[Kestrel] Merging weights...")
   model = model.merge_and_unload()
 
-  print(f"[Kestrel] Saving merged model to {output_dir}...")
+  logger.info(f"[Kestrel] Saving merged model to {output_dir}...")
   model.save_pretrained(output_dir)
   tokenizer.save_pretrained(output_dir)
 
-  print("[Kestrel] Merge complete! Model ready for GGUF conversion.")
+  logger.info("[Kestrel] Merge complete! Model ready for GGUF conversion.")
 
 if __name__ == "__main__":
   main()
