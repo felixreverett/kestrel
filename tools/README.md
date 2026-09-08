@@ -2,6 +2,13 @@
 
 Subfolder for assistive tools as part of the local language model development process.
 
+## Contents
+1. inputFormatter.go
+2. train.py
+3. merge.py
+
+<!--- ============= -->
+
 ## 1 inputFormatter
 
 ### 1.1 Build instructions
@@ -35,7 +42,33 @@ To recreate the .jsonl datasets used in training, enter the following flags with
 
 `-ad MorisienMT/train.fr-cr.fr -al "French" -ud MorisienMT/train.fr-cr.cr -ul "Mauritian Creole" -b=true`
 
+<!--- ============= -->
+
 ## 2 train.py
+
+### 2.1 What is train.py?
+
+The train script is used to fine-tune an existing base model on a provided dataset.
+
+### 2.2 Usage instructions
+
+To fine-tune the base model on the dataset, first ensure your python environment is activated.
+
+Next, run the script with `python tools/train.py` plus any additional command-line flags. It is recommended
+to simply run the script with a predefined JSON config for ease of use: `python tools/train.py -c exampleconfig.json`. If a config is provided, all other command-line flags will be ignored.
+
+### 2.3 Command-line flags
+
+| Command line Flag | Default Value     | Comments
+| :---------------- | :---------------- | :---------
+| -c / --config     | None              | Config file, (located in configs/)
+| -m / --model      | "4.1-3b"          | Base model shortcut.
+| -d / --dataset    | English-Mauritian Creole-bidirectional.jsonl | Dataset filename (located in datasets/)
+| -o / --output     | None              | Output filename (located in adapters/)
+| -bs / --batchsize | 2                 | Per-device training batch size
+| -ms / --maxsteps  | 1                 | Maximum training steps (or -1 for full epochs)
+
+<!--- ============= -->
 
 ## 3 merge.py
 
@@ -51,12 +84,12 @@ To merge your adapter weights back into the base model, first ensure your python
 
 Next, run the script with the below command. The script will look for a `kestrel_config.json` file within the adapter's directory to automatically detect the model, meaning -m is not required.
 
-`python tools/merge.py {-m 4.1-3b} -a kestrel-4.1-3b -o kestrel-4.1-3b-final`
+`python tools/merge.py -a kestrel-4.1-3b`
 
 ### 3.3 Command-line flags
 
-| Command line Flag | Default Value                 | Comments
-| :---------------- | :---------------------------- | :--
-| -m                | "4.1-8b"                      | The base model. Should match that used for training
-| -a                | "kestrel-4.1-8b"              | The adapter weights to merge back into the base model
-| -o                | "kestrel-4.1-8b-final"        | The final output folder name for the models/ subdirectory
+| Command line Flag | Default Value | Comments
+| :---------------- | :------------ | :--------------------------------------------------
+| -a / --adapter    | None          | The directory name of the trained adapter
+| -m / --model      | None          | The base model. Should match that used for training
+| -o / --output     | None          | Output folder name for the models/ subdirectory
