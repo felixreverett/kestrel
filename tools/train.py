@@ -4,6 +4,7 @@ import os
 import argparse
 import json
 import torch
+import logging
 from dataclasses import dataclass, field, asdict
 from datasets import load_dataset
 from transformers import (
@@ -102,6 +103,12 @@ MODEL_REGISTRY= {
 
 def main():
 
+  logger = logging.getLogger(__name__)
+  logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+
+  script_dir = os.path.dirname(os.path.abspath(__file__))
+  project_root = os.path.abspath(os.path.join(script_dir, ".."))
+
   # ==================================================
   # Set up command-line flag interpreter via argparse
   # ==================================================
@@ -119,10 +126,20 @@ def main():
   # Build configs
   # ==================================================
 
-  if args.config and os.path.exists(args.config):
-    print(f"[Kestrel] Loading hyperparameters from config file: {args.config}")
-    cfg = KestrelConfig.from_json(args.config)
-  else:
+  cfg = None
+  if args.config:
+    if os.path.exists(args.config):
+      resolved_config_path = args.config
+    else:
+      resolved_config_path = os.path.join(project_root, "configs", args.config)
+
+    if os.path.exists(resolved_config_path):
+      logger.info(f"[Kestrel] Loading hyperparameters from config file: {resolved_config_path}")
+      cfg = KestrelConfig.from_json(resolved_config_path)
+    else:
+      logger.warning(f"[Kestrel] WARNING: Config file {resolved_config_path} not found. Using CLI defaults.")
+
+  if cfg is None:
     cfg = KestrelConfig(
       model=args.model,
       dataset=args.dataset,
@@ -138,14 +155,11 @@ def main():
 
   model_id = MODEL_REGISTRY[cfg.model]
 
-  script_dir = os.path.dirname(os.path.abspath(__file__))
-  project_root = os.path.abspath(os.path.join(script_dir, ".."))
-  
   dataset_path = os.path.join(project_root, "datasets", cfg.dataset)
   output_dir = os.path.join(project_root, cfg.output_dir or f"adapters/kestrel-{cfg.model}")
 
-  print(f"[Kestrel] Using model: {model_id}")
-  print(f"[Kestrel] Loading tokeniser...")
+  logger.info(f"[Kestrel] Using model: {model_id}")
+  logger.info(f"[Kestrel] Loading tokeniser...")
 
   # ==================================================
   # Initialise tokeniser
@@ -161,7 +175,7 @@ def main():
   # Load dataset
   # ==================================================
 
-  print("[Kestrel] Loading and formatting dataset...")
+  logger.info("[Kestrel] Loading and formatting dataset...")
   dataset = load_dataset("json", data_files=dataset_path, split="train")
 
   def format_chat(example):
@@ -174,7 +188,7 @@ def main():
   # Set up bits and bytes configuration
   # ==================================================
 
-  print("[Kestrel] Configuring 4-bit quantisation and loading model...")
+  logger.info("[Kestrel] Configuring 4-bit quantisation and loading model...")
 
   compute_dtype = torch.bfloat16 if cfg.bnb.bnb_4bit_compute_dtype == "bfloat16" else torch.float16
 
@@ -199,7 +213,7 @@ def main():
   # Inject LoRA adapters
   # ==================================================
 
-  print("[Kestrel] Injecting LoRA adapters...")
+  logger.info("[Kestrel] Injecting LoRA adapters...")
 
   lora_config = LoraConfig(
     r=cfg.lora.r,
@@ -230,7 +244,7 @@ def main():
   # Initialise trainer
   # ==================================================
 
-  print("[Kestrel] Initialising trainer...")
+  logger.info("[Kestrel] Initialising trainer...")
 
   trainer = SFTTrainer(
     model=model,
@@ -244,7 +258,7 @@ def main():
   # Train (takes a while, to put it mildly)
   # ==================================================
 
-  print("[Kestrel] Starting training...")
+  logger.info("[Kestrel] Starting training...")
 
   # Check if a checkpoint exists to resume automatically
   last_checkpoint = None
@@ -252,11 +266,11 @@ def main():
     checkpoints = [os.path.join(output_dir, d) for d in os.listdir(output_dir) if d.startswith("checkpoint-")]
     if checkpoints:
       last_checkpoint = sorted(checkpoints, key=lambda x: int(x.split("-")[-1]))[-1]
-      print(f"[Kestrel] Found existing checkpoint! Resuming from: {last_checkpoint}")
+      logger.info(f"[Kestrel] Found existing checkpoint! Resuming from: {last_checkpoint}")
 
   trainer.train(resume_from_checkpoint=last_checkpoint)
 
-  print(f"[Kestrel] Saving final adapter to {output_dir}...")
+  logger.info(f"[Kestrel] Saving final adapter to {output_dir}...")
   if trainer.model is not None:
     trainer.model.save_pretrained(output_dir)
   tokenizer.save_pretrained(output_dir)
@@ -273,9 +287,9 @@ def main():
         "hyperparameters": asdict(cfg)
     }, f, indent=2)
   
-  print(f"[Kestrel] Saved training config to {config_path}")
+  logger.info(f"[Kestrel] Saved training config to {config_path}")
 
-  print("[Kestrel] Training complete. Ending program.")
+  logger.info("[Kestrel] Training complete. Ending program.")
 
 if __name__ == "__main__":
   main()
