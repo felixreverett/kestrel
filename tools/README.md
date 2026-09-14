@@ -93,3 +93,19 @@ Next, run the script with the below command. The script will look for a `kestrel
 | -a / --adapter    | None          | The directory name of the trained adapter
 | -m / --model      | None          | The base model. Should match that used for training
 | -o / --output     | None          | Output folder name for the models/ subdirectory
+
+## 4 eval.py
+
+
+
+## 5 Converting to GGUF with llama.cpp
+
+### Instructions
+1. Clone llama.cpp from GitHub
+2. Set working directory to .../llama.cpp
+3. (Recommended) Use Python env
+    a. activate. e.g.: `conda activate kestrel`
+    b. Install requirements ` pip install -r requirements/requirements-convert_hf_to_gguf.txt`
+4. Convert merged fine-tuned models to .gguf format
+    a. `python convert_hf_to_gguf.py ../kestrel/models/kestrel-4.1-3b-final --outfile ../kestrel/models/kestrel-4.1-8b-f16.gguf --outtype f16`
+5. (Recommended) quantise to 4-bit using llama-quantize (requires compiling binary with cmake)
