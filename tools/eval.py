@@ -40,6 +40,10 @@ def main():
   parser.add_argument("-t", "--test_file", required=True, help="Path to test JSONL file")
   parser.add_argument("-o", "--output_file", default="eval_results.json", help="Path to save results")
   parser.add_argument("--max_samples", type=int, default=None, help="Optional limit on test samples for quick validation")
+
+  parser.add_argument("--load_in_8bit", action="store_true", help="Load model in 8-bit")
+  parser.add_argument("--load_in_4bit", action="store_true", help="Load model in 4-bit")
+
   args = parser.parse_args()
 
   print(f"[Kestrel] Loading model and tokenizer from: {args.model_path}")
@@ -47,11 +51,23 @@ def main():
   
   # ==================================================
 
+  load_kwargs: Dict[str, Any] = {"device_map": "auto"}
+
+  if args.load_in_8bit:
+      print("[Kestrel] Loading model in 8-bit precision...")
+      load_kwargs["load_in_8bit"] = True
+  elif args.load_in_4bit:
+      print("[Kestrel] Loading model in 4-bit precision...")
+      load_kwargs["load_in_4bit"] = True
+  else:
+      print("[Kestrel] Loading model in bfloat16 precision...")
+      load_kwargs["torch_dtype"] = torch.bfloat16
+
   model: Any = AutoModelForCausalLM.from_pretrained(
     args.model_path,
-    torch_dtype=torch.bfloat16,
-    device_map="cuda:0"
+    **load_kwargs
   )
+
   model.eval()
 
   # ==================================================
