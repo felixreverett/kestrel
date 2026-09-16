@@ -2,9 +2,10 @@
 
 import json
 import argparse
+import re
 from typing import Any, List, Dict
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import sacrebleu
 from tqdm import tqdm
 
@@ -55,10 +56,12 @@ def main():
 
   if args.load_in_8bit:
       print("[Kestrel] Loading model in 8-bit precision...")
-      load_kwargs["load_in_8bit"] = True
+      load_kwargs["quantization_config"] = BitsAndBytesConfig(load_in_8bit=True)
+      load_kwargs["torch_dtype"] = torch.float16
   elif args.load_in_4bit:
       print("[Kestrel] Loading model in 4-bit precision...")
-      load_kwargs["load_in_4bit"] = True
+      load_kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+      load_kwargs["torch_dtype"] = torch.float16
   else:
       print("[Kestrel] Loading model in bfloat16 precision...")
       load_kwargs["torch_dtype"] = torch.bfloat16
@@ -84,10 +87,7 @@ def main():
   # Containers for results
   # ==================================================
 
-  records = {
-    "en_to_km": {"hyp": [], "ref": [], "samples": []},
-    "km_to_en": {"hyp": [], "ref": [], "samples": []}
-  }
+  records: Dict[str, Any] = {}
 
   # ==================================================
   # Fetch token IDs for stopping generation
@@ -112,13 +112,22 @@ def main():
         target_text = m["content"]
 
     # ==================================================
-    # Identify translation direction
+    # Dynamically identify translation direction
     # ==================================================
 
-    if "into Mauritian Creole" in system_text:
-      direction_key = "en_to_km"
+    match = re.search(r"Translate the following (.*?) text into (.*?)$", system_text.strip())
+    if match:
+      src_lang = match.group(1).strip()
+      tgt_lang = match.group(2).strip()
     else:
-      direction_key = "km_to_en"
+      src_lang = "Source"
+      tgt_lang = "Target"
+
+    direction_key = f"{src_lang}_to_{tgt_lang}"
+    direction_name = f"{src_lang} -> {tgt_lang}"
+
+    if direction_key not in records:
+      records[direction_key] = {"hyp": [], "ref": [], "samples": [], "name": direction_name}
 
     # ==================================================
     # Reconstruct ChatML prompt
@@ -157,18 +166,23 @@ def main():
     })
 
   # ==================================================
-  # Evaluate directions independently
+  # Evaluate directions dynamically
   # ==================================================
 
-  en_km_scores = evaluate_direction("English -> Mauritian Creole", records["en_to_km"]["hyp"], records["en_to_km"]["ref"])
-  km_en_scores = evaluate_direction("Mauritian Creole -> English", records["km_to_en"]["hyp"], records["km_to_en"]["ref"])
+  directional_scores = {}
+  all_hyp = []
+  all_ref = []
+
+  for key, data_dict in records.items():
+    scores = evaluate_direction(data_dict["name"], data_dict["hyp"], data_dict["ref"])
+    directional_scores[key] = scores
+    all_hyp.extend(data_dict["hyp"])
+    all_ref.extend(data_dict["ref"])
 
   # ==================================================
   # Aggregate scores across whole set
   # ==================================================
 
-  all_hyp = records["en_to_km"]["hyp"] + records["km_to_en"]["hyp"]
-  all_ref = records["en_to_km"]["ref"] + records["km_to_en"]["ref"]
   overall_scores = evaluate_direction("Overall (Bidirectional)", all_hyp, all_ref)
 
   # ==================================================
@@ -177,20 +191,14 @@ def main():
 
   final_output = {
     "overall": overall_scores,
-    "en_to_km": en_km_scores,
-    "km_to_en": km_en_scores,
-    "predictions": {
-      "en_to_km": records["en_to_km"]["samples"],
-      "km_to_en": records["km_to_en"]["samples"]
-    }
+    "directions": directional_scores,
+    "predictions": {k: v["samples"] for k, v in records.items()}
   }
 
   with open(args.output_file, "w", encoding="utf-8") as f:
     json.dump(final_output, f, indent=2, ensure_ascii=False)
       
   print(f"\n[Kestrel] Benchmark saved to {args.output_file}")
-
-  # ==================================================
 
 if __name__ == "__main__":
   main()
