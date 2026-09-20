@@ -29,6 +29,22 @@ class EvalConfig:
   load_in_4bit: bool = False
 
 # ==================================================
+# Text Sanitisation:
+# - Strips ChatML artefacts
+# ==================================================
+
+def clean_chatml(text: str) -> str:
+  if not text:
+    return ""
+
+  text = re.sub(r"^(?:<\|im_start\|>\s*assistant\s*)+", "", text, flags=re.IGNORECASE)
+  text = re.split(r"<\|(?:im_end|im_start|endoftext|end_of_text)\|?>", text, flags=re.IGNORECASE)[0]
+  text = re.sub(r"<\|.*?\|>", "", text)
+  text = re.sub(r"<\|.*$", "", text)
+
+  return text.strip()
+
+# ==================================================
 # Evaluate Direction:
 # - calculates BLEU and chrF++ scores for a set of
 #   hypotheses and references
@@ -174,13 +190,19 @@ def main():
           langs = dir_key.split("_to_")
           dir_name = f"{langs[0]} -> {langs[1]}" if len(langs) == 2 else dir_key
           
+          cleaned_samples = []
+          for s in samples:
+            cleaned_pred = clean_chatml(s["prediction"])
+            s["prediction"] = cleaned_pred
+            cleaned_samples.append(s)
+
           records[dir_key] = {
-            "hyp": [s["prediction"] for s in samples],
-            "ref": [s["reference"] for s in samples],
-            "samples": samples,
+            "hyp": [s["prediction"] for s in cleaned_samples],
+            "ref": [s["reference"] for s in cleaned_samples],
+            "samples": cleaned_samples,
             "name": dir_name
           }
-          processed_count += len(samples)
+          processed_count += len(cleaned_samples)
     
     print(f"[Kestrel] Skipping first {processed_count} samples.")
 
@@ -246,7 +268,8 @@ def main():
         f"<|im_start|>assistant\n"
       )
       
-      inputs = tokenizer(prompt, return_tensors="pt").to("cuda:0")
+      device = model.device
+      inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
       with torch.no_grad():
         output_tokens = model.generate(
@@ -257,12 +280,12 @@ def main():
           eos_token_id=[tokenizer.eos_token_id, im_end_id]
         )
 
-      # ==================================================
-      # Slice input prompt tokens off to isolate model gen
-      # ==================================================
-
+      # Slice input prompt tokens off and decode
       generated_tokens = output_tokens[0][inputs.input_ids.shape[1]:]
-      prediction = tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
+      raw_prediction = tokenizer.decode(generated_tokens, skip_special_tokens=True)
+      
+      # Strip ChatML tags and trailing partial tokens
+      prediction = clean_chatml(raw_prediction)
 
       records[direction_key]["hyp"].append(prediction)
       records[direction_key]["ref"].append(target_text)
