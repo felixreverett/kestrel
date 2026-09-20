@@ -96,11 +96,32 @@ Next, run the script with the below command. The script will look for a `kestrel
 
 ## 4 eval.py
 
+### 4.1 What is eval.py?
 
+The evaluation script `eval.py` is used to test the BLEU and chrF++ metrics for a fine-tuned model, specifically one in Hugging-Face format (rather than a .gguf). BLEU and chrF++ are two similar machine translation scores, with the former being considerably more established, but the latter is arguably more in-line with human evaluations.
+
+I highly recommend reading [Papineni et al., 2002](https://aclanthology.org/P02-1040/) and [Popovic, 2017](https://aclanthology.org/W17-4770/) if you wish to learn more. See [Mathur et al., 2020](https://aclanthology.org/2020.acl-main.448/) for a review of BLEU's shortcomings.
+
+As with all helper scripts in Kestrel, this is designed to be highly-extensible. There is an in-memory config
+
+### 4.2 Usage instructions
+
+To test a completed model, activate your Python environment `conda activate kestrel`, then execute the script with `python tools/eval.py -m {model_name} -t {test_filename} -o {output_name}`. All command-line flags are folder-relative. For example, to test a model named `kestrel-4.1-3b-final`, one could type the command `python tools.eval.py -m kestrel-4.1-3b-final -t "English-Mauritian Creole-test.jsonl" -o eval_results_kestrel-4.1-3b-final.json`
+
+### 4.3 Command-line flags
+
+| Command line Flag | Default Value     | Comments
+| :---------------- | :---------------- | :--------------------------------------------------
+| -m / --model_path | N/A (Required)    | The model to evaluate. Found in `models/`
+| -t / --test_file  | eval_results.json | Test dataset. Found in `datasets/`
+| -o / --output_path| N/A (Required)    | JSON output filename. Saved in `evaluation/`
+| --max_samples     | None              | Optional limit on test samples
+| --load_in_8bit    | False             | Load model in 8bit
+| --load_in_4bit    | False             | Load model in 4bit
 
 ## 5 Converting to GGUF with llama.cpp
 
-### Instructions
+### 5.1 Instructions
 1. Clone llama.cpp from GitHub
 2. Set working directory to .../llama.cpp
 3. (Recommended) Use Python env
