@@ -23,15 +23,22 @@ type Messages struct {
 func generateJSONL(
 	assistantDataset []string, assistantLanguage string,
 	userDataset []string, userLanguage string,
-	outputPath string, bidirectional bool, shuffle bool) bool {
+	outputPath string, bidirectional bool, shuffle bool, promptLanguage string) bool {
 
 	if len(assistantDataset) != len(userDataset) {
 		fmt.Println("Error: dataset lengths mismatch.")
 		return false
 	}
 
-	promptForward := fmt.Sprintf("You are an expert translator. Translate the following %s text into %s", userLanguage, assistantLanguage)
-	promptReverse := fmt.Sprintf("You are an expert translator. Translate the following %s text into %s", assistantLanguage, userLanguage)
+	var promptForward, promptReverse string
+
+	if promptLanguage == "fr" {
+		promptForward = fmt.Sprintf("Vous êtes un traducteur expert. Traduisez le texte %s suivant en %s.", userLanguage, assistantLanguage)
+		promptReverse = fmt.Sprintf("Vous êtes un traducteur expert. Traduisez le texte %s suivant en %s.", assistantLanguage, userLanguage)
+	} else {
+		promptForward = fmt.Sprintf("You are an expert translator. Translate the following %s text into %s", userLanguage, assistantLanguage)
+		promptReverse = fmt.Sprintf("You are an expert translator. Translate the following %s text into %s", assistantLanguage, userLanguage)
+	}
 
 	var conversations []Messages
 
@@ -95,9 +102,7 @@ func validateInput(filePath string) ([]string, error) {
 	}
 
 	trimmedInput := strings.ReplaceAll(string(content), "\r", "")
-
 	trimmedInput = strings.TrimSuffix(trimmedInput, "\n")
-
 	fileLines := strings.Split(trimmedInput, "\n")
 
 	return fileLines, nil
@@ -112,6 +117,7 @@ func main() {
 	userLanguage := flag.String("ul", "Mauritian Creole", "The User Language.")
 	bidirectional := flag.Bool("b", true, "Generate translations in both directions")
 	shuffle := flag.Bool("s", true, "Shuffle the resulting dataset")
+	promptLanguage := flag.String("pl", "en", "The language of the system prompt (en or fr).")
 	outputPath := flag.String("o", "", "Output path.")
 
 	flag.Parse()
@@ -145,7 +151,7 @@ func main() {
 	success := generateJSONL(
 		validatedAssistantDataset, *assistantLanguage,
 		validatedUserDataset, *userLanguage,
-		finalOutputPath, *bidirectional, *shuffle,
+		finalOutputPath, *bidirectional, *shuffle, *promptLanguage,
 	)
 
 	if success {
