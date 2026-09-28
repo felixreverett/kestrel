@@ -2,19 +2,29 @@
 
 ## What is Kestrel?
 
-Kestrel is a lightweight, local language model for Mauritian Creole created as my thesis project for my MSc Computer Science at University College London. Built on IBM Granite 3.0 open-source language model infrastructure, the project aims to democratise AI for lower-resource languages - those that have much smaller publicly-available corpora of data than major world languages such as English and French.
+Kestrel is a lightweight, local language model for Mauritian Creole created as the capstone of my Master's Postgraduate Degree in Computer Science at University College London (UCL). Built on the IBM Granite 4.1 family of open-weight base models, Kestrel aims to democratise artificial intelligence for lower-resource languages - those that have much smaller publicly-available corpora of data than major world languages such as English and French.
 
-## Technologies and Tools
+The project investigates the fine-tuning of Granite for French- and English-Mauritian Creole translation, using BLEU and chrF++ scores to provide a quantitative analysis of results. 
 
-### Base Model: IBM Granite 3.0
+A full PDF will be publicly available alongside this repository once grading has concluded.
 
-### Environment: Python 3.11 via Anaconda
+## Understanding this repository
 
-### Core ML Framework: PyTorch
+This repository consists of the following folders:
 
-Fine-t
+| Folder    | Purpose
+| :-------- | :------
+| adapters/ | Location of adapter weights after initial training.
+| configs/  | Location of config files used to facilitate model training from a single source.
+| datasets/ | Local storage of datasets. The KMMT dataset used in this study can be found online.
+| evaluation/ | Location for final model results (BLEU and chrF++).
+| models/   | Location for models, including SafeTensors and .gguf formats.
+| tools/    | The various programs and scripts for the Kestrel pipeline.
+
+To use it yourself, it is recommended to start with the Tools subfolder, which has a dedicated README to describe all the steps of the finetuning pipeline. The Kestrel paper also elaborates on the functionality and usage of each tool.
 
 ## Fine-tuning instructions
+
 The training pipeline uses Parameter-Efficient Fine-Tuning (PEFT) and 4-bit quantisation to enable the model to train on consumer-grade GPUs (RTX 4060 8GB, RTX 4070 12GB). To set up the environment, follow the instructions below. Ensure you have Anaconda installed.
 
 1. Create a new environment with Anaconda: `conda create -n kestrel python=3.11`
