@@ -163,11 +163,13 @@ def main():
   parser.add_argument("-o", "--output_dir", default="granite-4.1-3b-tk", help="Output folder name in models/")
   args = parser.parse_args()
 
-  # 1. Load dataset (train and dev sets from KreolMorisienMT)
+  # 1. Load datasets
   corpus_paths = [
     os.path.join(project_root, "datasets", "MorisienMT", "train.cr"),
-    os.path.join(project_root, "datasets", "MorisienMT", "dev.cr")
+    os.path.join(project_root, "datasets", "MorisienMT", "dev.cr"),
+    os.path.join(project_root, "datasets", "train.en-cr.cr")
   ]
+
   corpus = load_creole_corpus(corpus_paths)
   if not corpus:
     logger.error("[Kestrel] Corpus is empty. Please ensure MorisienMT/train.cr exists.")
