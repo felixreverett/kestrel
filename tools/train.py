@@ -5,6 +5,7 @@ import argparse
 import json
 import torch
 import logging
+
 from dataclasses import dataclass, field, asdict
 from datasets import load_dataset
 from transformers import (
@@ -37,6 +38,7 @@ class LoraHyperConfig:
   lora_dropout: float = 0.05
   bias: Literal["none", "all", "lora_only"] = "none"
   task_type: str = "CAUSAL_LM"
+  ensure_weight_tying: bool = False
 
 @dataclass
 class TrainingHyperConfig:
@@ -50,6 +52,7 @@ class TrainingHyperConfig:
   loss_type: str = "nll"
   save_strategy: str = "steps"
   save_steps: int = 100
+  save_total_limit: int = None
   max_seq_length: int = 512
 
 @dataclass
@@ -85,7 +88,9 @@ class KestrelConfig:
 MODEL_REGISTRY= {
   "4.1-3b": "ibm-granite/granite-4.1-3b-base",
   "4.1-8b": "ibm-granite/granite-4.1-8b-base",
-  "3.0-3b": "ibm-granite/granite-3.0-3b-a800m-base"
+  "3.0-3b": "ibm-granite/granite-3.0-3b-a800m-base",
+  "granite-4.1-3b-tk": "models/granite-4.1-3b-tk",
+  "granite-4.1-8b-tk": "models/granite-4.1-8b-tk"
 }
 
 
@@ -221,7 +226,8 @@ def main():
     target_modules=cfg.lora.target_modules,
     lora_dropout=cfg.lora.lora_dropout,
     bias=cfg.lora.bias,
-    task_type=cfg.lora.task_type
+    task_type=cfg.lora.task_type,
+    ensure_weight_tying=cfg.lora.ensure_weight_tying
   )
 
   training_args = SFTConfig(
@@ -236,6 +242,7 @@ def main():
     loss_type=cfg.training.loss_type,
     save_strategy=cfg.training.save_strategy,
     save_steps=cfg.training.save_steps,
+    save_total_limit=cfg.training.save_total_limit,
     max_length=cfg.training.max_seq_length,
     gradient_checkpointing_kwargs={"use_reentrant": False},
   )
