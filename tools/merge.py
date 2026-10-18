@@ -17,7 +17,9 @@ from peft import PeftModel
 MODEL_REGISTRY = {
   "4.1-3b": "ibm-granite/granite-4.1-3b-base",
   "4.1-8b": "ibm-granite/granite-4.1-8b-base",
-  "3.0-3b": "ibm-granite/granite-3.0-3b-a800m-base"
+  "3.0-3b": "ibm-granite/granite-3.0-3b-a800m-base",
+  "granite-4.1-3b-tk": "models/granite-4.1-3b-tk",
+  "granite-4.1-8b-tk": "models/granite-4.1-8b-tk"
 }
 
 def main():
@@ -31,7 +33,7 @@ def main():
   args = parser.parse_args()
 
   if args.output is None:
-    args.output = f"{args.adapter}-final"
+    args.output = f"{args.adapter}"
 
   # ==================================================
   # Resolve paths relative to tools/
@@ -104,7 +106,9 @@ def main():
     device_map="auto"
   )
 
-  tokenizer = AutoTokenizer.from_pretrained(base_model_id)
+  tokenizer = AutoTokenizer.from_pretrained(adapter_dir)
+  
+  base_model.resize_token_embeddings(len(tokenizer))
   
   logger.info(f"[Kestrel] Loading trained adapters from {adapter_dir}...")
   model = PeftModel.from_pretrained(base_model, adapter_dir)
