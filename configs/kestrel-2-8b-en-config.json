@@ -1,0 +1,41 @@
+{
+  "model": "granite-4.1-8b-tk",
+  "dataset": "EN-KM-bidirectional.jsonl",
+  "output_dir": "adapters/kestrel-2-8b-en",
+  "bnb": {
+    "load_in_4bit": true,
+    "bnb_4bit_use_double_quant": true,
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_compute_dtype": "bfloat16"
+  },
+  "lora": {
+    "r": 16,
+    "lora_alpha": 32,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "embed_tokens",
+      "lm_head"
+    ],
+    "lora_dropout": 0.05,
+    "bias": "none",
+    "task_type": "CAUSAL_LM",
+    "ensure_weight_tying": true
+  },
+  "training": {
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "learning_rate": 0.0002,
+    "logging_steps": 10,
+    "max_steps": -1,
+    "optim": "paged_adamw_8bit",
+    "bf16": true,
+    "loss_type": "nll",
+    "save_strategy": "steps",
+    "save_steps": 1000,
+    "save_total_limit": 3,
+    "max_seq_length": 512
+  }
+}

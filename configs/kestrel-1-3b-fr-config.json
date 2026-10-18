@@ -1,7 +1,7 @@
 {
-  "model": "4.1-8b",
-  "dataset": "French-Mauritian Creole-bidirectional.jsonl",
-  "output_dir": "adapters/kestrel-4.1-8b-fr",
+  "model": "4.1-3b",
+  "dataset": "FR-KM-bidirectional.jsonl",
+  "output_dir": "adapters/kestrel-1-3b-fr",
   "bnb": {
     "load_in_4bit": true,
     "bnb_4bit_use_double_quant": true,
