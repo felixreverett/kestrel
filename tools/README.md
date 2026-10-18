@@ -3,9 +3,10 @@
 Subfolder for assistive tools as part of the local language model development process.
 
 ## Contents
-1. inputFormatter.go
-2. train.py
-3. merge.py
+1. **inputFormatter.go**: Converts datasets into ChatML format.
+2. **train.py**: Fine-tunes a new model.
+3. **merge.py**: Merges fine-tuned adapter weights.
+4. **eval.py**: Calculates BLEU and chrF++ scores of a given model.
 
 <!--- ============= -->
 
@@ -50,12 +51,22 @@ To recreate the .jsonl datasets used in training, enter the following flags with
 
 The train script is used to fine-tune an existing base model on a provided dataset.
 
-### 2.2 Usage instructions
+### 2.2 Instructions
 
 To fine-tune the base model on the dataset, first ensure your python environment is activated.
 
 Next, run the script with `python tools/train.py` plus any additional command-line flags. It is recommended
 to simply run the script with a predefined JSON config for ease of use: `python tools/train.py -c exampleconfig.json`. If a config is provided, all other command-line flags will be ignored.
+
+#### 2.2.1 Example command-line statements
+1. `python tools/train.py -c configs/kestrel-1-3b-en-config.json`
+2. `python tools/train.py -c configs/kestrel-1-3b-fr-config.json`
+3. `python tools/train.py -c configs/kestrel-1-8b-en-config.json`
+4. `python tools/train.py -c configs/kestrel-1-8b-fr-config.json`
+5. `python tools/train.py -c configs/kestrel-2-3b-en-config.json`
+6. `python tools/train.py -c configs/kestrel-2-3b-fr-config.json`
+7. `python tools/train.py -c configs/kestrel-2-8b-en-config.json`
+8. `python tools/train.py -c configs/kestrel-2-8b-fr-config.json`
 
 ### 2.3 Command-line flags
 
@@ -85,6 +96,16 @@ To merge your adapter weights back into the base model, first ensure your python
 Next, run the script with the below command. The script will look for a `kestrel_config.json` file within the adapter's directory to automatically detect the model, meaning -m is not required.
 
 `python tools/merge.py -a kestrel-4.1-3b`
+
+#### 3.2.1 Example command-line statements
+1. `python tools/merge.py -a kestrel-4.1-3b-en`
+2. `python tools/merge.py -a kestrel-4.1-3b-fr`
+3. `python tools/merge.py -a kestrel-4.1-8b-en`
+4. `python tools/merge.py -a kestrel-4.1-8b-fr`
+5. `python tools/merge.py -a kestrel-2-3b-en`
+6. `python tools/merge.py -a kestrel-2-3b-fr`
+7. `python tools/merge.py -a kestrel-2-8b-en`
+8. `python tools/merge.py -a kestrel-2-8b-fr`
 
 ### 3.3 Command-line flags
 
