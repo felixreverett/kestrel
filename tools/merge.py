@@ -99,22 +99,25 @@ def main():
   # Load base model
   # ==================================================
 
-  logger.info(f"[Kestrel] Loading original base model: {base_model_id}")
+  logger.info(f"[Kestrel] Loading original base model (on CPU): {base_model_id}")
   base_model = AutoModelForCausalLM.from_pretrained(
     base_model_id,
-    torch_dtype=torch.bfloat16,
-    device_map="auto"
+    dtype=torch.bfloat16,
+    device_map="cpu",
+    low_cpu_mem_usage=True
   )
 
   tokenizer = AutoTokenizer.from_pretrained(adapter_dir)
   
-  base_model.resize_token_embeddings(len(tokenizer))
+  if base_model.get_input_embeddings().weight.shape[0] != len(tokenizer):
+    base_model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
   
   logger.info(f"[Kestrel] Loading trained adapters from {adapter_dir}...")
-  model = PeftModel.from_pretrained(base_model, adapter_dir)
+  model = PeftModel.from_pretrained(base_model, adapter_dir, device_map="cpu")
 
   logger.info("[Kestrel] Merging weights...")
   model = model.merge_and_unload()
+  model.tie_weights()
 
   logger.info(f"[Kestrel] Saving merged model to {output_dir}...")
   model.save_pretrained(output_dir)
