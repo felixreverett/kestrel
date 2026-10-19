@@ -37,8 +37,8 @@ def clean_chatml(text: str) -> str:
   if not text:
     return ""
 
-  text = re.sub(r"^(?:<\|im_start\|>\s*assistant\s*)+", "", text, flags=re.IGNORECASE)
-  text = re.split(r"<\|(?:im_end|im_start|endoftext|end_of_text)\|?>", text, flags=re.IGNORECASE)[0]
+  text = re.sub(r"^(?:<\|(?:im_start|start_of_role)\|>\s*assistant\s*(?:<\|end_of_role\|>)?)+", "", text, flags=re.IGNORECASE)
+  text = re.split(r"<\|(?:im_end|im_start|endoftext|end_of_text|start_of_role|end_of_role)\|?>", text, flags=re.IGNORECASE)[0]
   text = re.sub(r"<\|.*?\|>", "", text)
   text = re.sub(r"<\|.*$", "", text)
 
@@ -87,6 +87,7 @@ def save_progress(records: Dict[str, Any], output_file: str):
   overall_scores = evaluate_direction("Overall (Bidirectional)", all_hyp, all_ref)
 
   final_output = {
+    "last_processed_index": len(all_hyp),
     "overall": overall_scores,
     "directions": directional_scores,
     "predictions": {k: v["samples"] for k, v in records.items()}
@@ -96,10 +97,12 @@ def save_progress(records: Dict[str, Any], output_file: str):
   if out_dir:
     os.makedirs(out_dir, exist_ok=True)
 
-  with open(output_file, "w", encoding="utf-8") as f:
+  temp_file = f"{output_file}.tmp"
+  with open(temp_file, "w", encoding="utf-8") as f:
     json.dump(final_output, f, indent=2, ensure_ascii=False)
+  os.replace(temp_file, output_file)
       
-  print(f"\n[Kestrel] Benchmark saved to {output_file}")
+  print(f"\n[Kestrel] Progress saved ({len(all_hyp)} samples) to {output_file}")
 
 # ==================================================
 # Main method:
@@ -216,7 +219,10 @@ def main():
   # Fetch token IDs for stopping generation
   # ==================================================
   
-  im_end_id = tokenizer.encode("<|im_end|>")[-1]
+  stop_token_ids = [tokenizer.eos_token_id]
+  end_of_role_id = tokenizer.convert_tokens_to_ids("<|end_of_role|>")
+  if isinstance(end_of_role_id, int) and end_of_role_id != tokenizer.unk_token_id:
+    stop_token_ids.append(end_of_role_id)
 
   print(f"[Kestrel] Generating translations for {len(data_to_process)} test pairs...")
 
@@ -239,7 +245,7 @@ def main():
       # Dynamically get translation direction
       # ==================================================
 
-      match_en = re.search(r"Translate the following (.*?) text into (.*?)$", system_text.strip())
+      match_en = re.search(r"Translate the following (.*?) text into (.*?)\.?$", system_text.strip())
       match_fr = re.search(r"Traduisez le texte (.*?) suivant en (.*?)\.$", system_text.strip())
       
       if match_en:
@@ -260,12 +266,16 @@ def main():
       
       # ==================================================
       # Reconstruct ChatML prompt
+      # - Changed to use Granite's native tokens:
+      #   - <|start_of_role|>
+      #   - <|end_of_role|>
+      #   - <|end_of_text|>
       # ==================================================
 
       prompt = (
-        f"<|im_start|>system\n{system_text}<|im_end|>\n"
-        f"<|im_start|>user\n{user_text}<|im_end|>\n"
-        f"<|im_start|>assistant\n"
+        f"<|start_of_role|>system<|end_of_role|>{system_text}<|end_of_text|>\n"
+        f"<|start_of_role|>user<|end_of_role|>{user_text}<|end_of_text|>\n"
+        f"<|start_of_role|>assistant<|end_of_role|>"
       )
       
       device = model.device
@@ -277,7 +287,7 @@ def main():
           max_new_tokens=128,
           do_sample=False,              
           pad_token_id=tokenizer.eos_token_id,
-          eos_token_id=[tokenizer.eos_token_id, im_end_id]
+          eos_token_id=stop_token_ids
         )
 
       # Slice input prompt tokens off and decode
