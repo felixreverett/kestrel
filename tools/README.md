@@ -58,11 +58,13 @@ To fine-tune the base model on the dataset, first ensure your python environment
 Next, run the script with `python tools/train.py` plus any additional command-line flags. It is recommended
 to simply run the script with a predefined JSON config for ease of use: `python tools/train.py -c exampleconfig.json`. If a config is provided, all other command-line flags will be ignored.
 
-#### 2.2.1 Example command-line statements
+#### 2.2.1 Training the first-generation models
 1. `python tools/train.py -c configs/kestrel-1-3b-en-config.json`
 2. `python tools/train.py -c configs/kestrel-1-3b-fr-config.json`
 3. `python tools/train.py -c configs/kestrel-1-8b-en-config.json`
 4. `python tools/train.py -c configs/kestrel-1-8b-fr-config.json`
+
+#### 2.2.2 Training the second-generation models
 5. `python tools/train.py -c configs/kestrel-2-3b-en-config.json`
 6. `python tools/train.py -c configs/kestrel-2-3b-fr-config.json`
 7. `python tools/train.py -c configs/kestrel-2-8b-en-config.json`
@@ -127,13 +129,13 @@ As with all helper scripts in Kestrel, this is designed to be highly-extensible.
 
 Explicit commands are provided in this section. Note that the script is designed to be extensible, and custom configurations are supported. These commands are provided to facilitate a 1:1 development.
 
-#### 4.1.1 Evaluate Base Models
+#### 4.1.1 Evaluate Zero-shot Base Models
 1. `python tools/eval.py -m granite-4.1-3b -t "EN-KM-test.jsonl" -o results_granite-4.1-3b-en.json`
 2. `python tools/eval.py -m granite-4.1-3b -t "FR-KM-test.jsonl" -o results_granite-4.1-3b-fr.json`
 3. `python tools/eval.py -m granite-4.1-8b -t "EN-KM-test.jsonl" -o results_granite-4.1-8b-en.json --load_in_8bit`
 4. `python tools/eval.py -m granite-4.1-8b -t "FR-KM-test.jsonl" -o results_granite-4.1-8b-fr.json --load_in_8bit`
 
-#### 4.1.2 Evaluate Tokenised Base Models (not recommended)
+#### 4.1.2 Evaluate Zero-shot Tokenised Base Models (not recommended)
 These models are still zero-shot and results are not valuable for analysis. Experimental testing produced largely meaningless outputs.
 1. `python tools/eval.py -m granite-4.1-3b-tk -t "EN-KM-test.jsonl" -o results_granite-4.1-3b-tk-en.json`
 2. `python tools/eval.py -m granite-4.1-3b-tk -t "FR-KM-test.jsonl" -o results_granite-4.1-3b-tk-fr.json`
@@ -142,15 +144,15 @@ These models are still zero-shot and results are not valuable for analysis. Expe
 
 #### 4.1.3 Evaluate Fine-tuned Kestrel 1 models
 1. `python tools/eval.py -m kestrel-1-3b-en -t "EN-KM-test.jsonl" -o results_kestrel-1-3b-en.json`
-2. `python tools/eval.py -m kestrel-1-3b-fr -t "FR-KM-test.jsonl" -o results_kestrel-1-3b-fn.json`
+2. `python tools/eval.py -m kestrel-1-3b-fr -t "FR-KM-test.jsonl" -o results_kestrel-1-3b-fr.json`
 3. `python tools/eval.py -m kestrel-1-8b-en -t "EN-KM-test.jsonl" -o results_kestrel-1-8b-en.json --load_in_8bit`
-4. `python tools/eval.py -m kestrel-1-8b-fr -t "FR-KM-test.jsonl" -o results_kestrel-1-8b-fn.json --load_in_8bit`
+4. `python tools/eval.py -m kestrel-1-8b-fr -t "FR-KM-test.jsonl" -o results_kestrel-1-8b-fr.json --load_in_8bit`
 
 #### 4.1.4 Evaluate Fine-tuned Kestrel 2 models
 1. `python tools/eval.py -m kestrel-2-3b-en -t "EN-KM-test.jsonl" -o results_kestrel-2-3b-en.json`
-2. `python tools/eval.py -m kestrel-2-3b-fr -t "FR-KM-test.jsonl" -o results_kestrel-2-3b-fn.json`
+2. `python tools/eval.py -m kestrel-2-3b-fr -t "FR-KM-test.jsonl" -o results_kestrel-2-3b-fr.json`
 3. `python tools/eval.py -m kestrel-2-8b-en -t "EN-KM-test.jsonl" -o results_kestrel-2-8b-en.json --load_in_8bit`
-4. `python tools/eval.py -m kestrel-2-8b-fr -t "FR-KM-test.jsonl" -o results_kestrel-2-8b-fn.json --load_in_8bit`
+4. `python tools/eval.py -m kestrel-2-8b-fr -t "FR-KM-test.jsonl" -o results_kestrel-2-8b-fr.json --load_in_8bit`
 
 ### 4.2 Usage instructions
 
@@ -181,19 +183,19 @@ To test a completed model, activate your Python environment `conda activate kest
 
 ## 6 tk_fertility_eval.py
 
-This script is used to calculate the fertility rate of the base and custom tokenisers, casting insight on the intrinsic tokenisation metrics. A custom tokeniser is hypothesised to produce a better final model, though this needs to be evaluated separately using extrinsic metrics (BLEU and chrF++).
+This script is used to calculate the fertility rate of the base and custom tokenisers, casting insight on the intrinsic tokenisation metrics. A custom tokeniser is hypothesised to produce a better final model, both in terms of cost-per-token for the end-user, and in terms of final translation quality.
 
-### 6.1 Instructions
+### 6.1 Using the Token Fertility Tool
 
-#### 6.1.1 Evaluate base tokeniser (3B and 8B in both FR and EN)
-3B and 8B models use the same tokeniser, so results are identical between 3B/8B versions.
-1. `python tools/tk_fertility-eval.py -b 4.1-3b -d "English-Mauritian Creole-test.jsonl" -o "tk_base-4.1-3b-en.json"`
-2. `python tools/tk_fertility-eval.py -b 4.1-3b -d "French-Mauritian Creole-test.jsonl" -o "tk_base-4.1-3b-fr.json"`
-3. `python tools/tk_fertility-eval.py -b 4.1-8b -d "English-Mauritian Creole-test.jsonl" -o "tk_base-4.1-8b-en.json"`
-4. `python tools/tk_fertility-eval.py -b 4.1-8b -d "French-Mauritian Creole-test.jsonl" -o "tk_base-4.1-8b-fr.json"`
+The custom tokeniser can be tested using the following set of commands, where `-b` is the base model, `-c` is the custom model, `-d` is the dataset to use, and `-o` is the desired output filename.
 
-#### 6.1.2 Evaluate custom tokeniser
-1. `python tools/tk_fertility-eval.py -b 4.1-3b -c models/granite-4.1-3b-tk -d "English-Mauritian Creole-test.jsonl" -o "tk_tk-4.1-3b-en.json"`
+The custom tokeniser is deterministic. This means it will produce identical results for Mauritian Creole for both French and English under the same dataset. It is not a measure of translation quality.
+
+1. `python tools/tk_fertility-eval.py -b 4.1-3b -c models/granite-4.1-3b-tk -d "EN-KM-test.jsonl" -o "tk_tk-4.1-3b-en.json"`
+2. `python tools/tk_fertility-eval.py -b 4.1-3b -c models/granite-4.1-3b-tk -d "FR-KM-test.jsonl" -o "tk_tk-4.1-3b-fr.json"`
+
+3. `python tools/tk_fertility-eval.py -b 4.1-8b -c models/granite-4.1-8b-tk -d "EN-KM-test.jsonl" -o "tk_tk-4.1-8b-en.json"`
+4. `python tools/tk_fertility-eval.py -b 4.1-8b -c models/granite-4.1-8b-tk -d "FR-KM-test.jsonl" -o "tk_tk-4.1-8b-fr.json"`
 
 ## 7 tk_build-tokeniser.py
 
