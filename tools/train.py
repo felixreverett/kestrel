@@ -34,17 +34,22 @@ class BnbConfig:
 class LoraHyperConfig:
   r: int = 16
   lora_alpha: int = 32
-  target_modules: list = field(default_factory=lambda: ["q_proj", "k_proj", "v_proj", "o_proj"])
+  target_modules: list = field(default_factory=lambda: [
+    "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"
+  ])
   lora_dropout: float = 0.05
   bias: Literal["none", "all", "lora_only"] = "none"
   task_type: str = "CAUSAL_LM"
   ensure_weight_tying: bool = False
+  train_new_tokens: bool = True
 
 @dataclass
 class TrainingHyperConfig:
   per_device_train_batch_size: int = 2
   gradient_accumulation_steps: int = 4
   learning_rate: float = 2e-4
+  warmup_ratio: float = 0.05
+  lr_scheduler_type: str = "cosine"
   logging_steps: int = 10
   max_steps: int = -1
   optim: str = "paged_adamw_8bit"
@@ -168,13 +173,22 @@ def main():
 
   # ==================================================
   # Initialise tokeniser
+  #
+  # - Changed to use Granite's native tokens:
+  #   - <|start_of_role|>
+  #   - <|end_of_role|>
+  #   - <|end_of_text|>
   # ==================================================
 
   tokenizer = AutoTokenizer.from_pretrained(model_id)
   if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
   tokenizer.padding_side = "right"
-  tokenizer.chat_template = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>\n'}}{% endfor %}"
+  tokenizer.chat_template = (
+    "{% for message in messages %}"
+    "{{ '<|start_of_role|>' + message['role'] + '<|end_of_role|>' + message['content'] + '<|end_of_text|>\n' }}"
+    "{% endfor %}"
+  )
 
   # ==================================================
   # Load dataset
@@ -220,21 +234,39 @@ def main():
 
   logger.info("[Kestrel] Injecting LoRA adapters...")
 
+  trainable_token_indices = None
+  if cfg.lora.train_new_tokens:
+    base_vocab_limit = tokenizer.init_kwargs.get(
+      "base_vocab_size",
+      max(tokenizer.added_tokens_decoder.keys(), default=len(tokenizer) - 1) + 1
+    )
+    new_token_ids = list(range(base_vocab_limit, len(tokenizer)))
+    if new_token_ids:
+      logger.info(f"[Kestrel] Making {len(new_token_ids):,} extended token embeddings trainable (IDs {base_vocab_limit}..{len(tokenizer) - 1}).")
+      trainable_token_indices = {"embed_tokens": new_token_ids}
+
   lora_config = LoraConfig(
     r=cfg.lora.r,
     lora_alpha=cfg.lora.lora_alpha,
     target_modules=cfg.lora.target_modules,
+    trainable_token_indices=trainable_token_indices,
+    ensure_weight_tying=cfg.lora.ensure_weight_tying,
     lora_dropout=cfg.lora.lora_dropout,
     bias=cfg.lora.bias,
     task_type=cfg.lora.task_type,
-    ensure_weight_tying=cfg.lora.ensure_weight_tying
   )
+
+  eff_batch_size = cfg.training.per_device_train_batch_size * cfg.training.gradient_accumulation_steps
+  total_steps = cfg.training.max_steps if cfg.training.max_steps > 0 else (len(dataset) // eff_batch_size) * 3
+  warmup_steps = int(total_steps * cfg.training.warmup_ratio)
 
   training_args = SFTConfig(
     output_dir=output_dir,
     per_device_train_batch_size=cfg.training.per_device_train_batch_size,
     gradient_accumulation_steps=cfg.training.gradient_accumulation_steps,
     learning_rate=cfg.training.learning_rate,
+    warmup_steps=warmup_steps,
+    lr_scheduler_type=cfg.training.lr_scheduler_type,
     logging_steps=cfg.training.logging_steps,
     max_steps=cfg.training.max_steps,
     optim=cfg.training.optim,
@@ -274,6 +306,15 @@ def main():
     if checkpoints:
       last_checkpoint = sorted(checkpoints, key=lambda x: int(x.split("-")[-1]))[-1]
       logger.info(f"[Kestrel] Found existing checkpoint! Resuming from: {last_checkpoint}")
+
+      state_path = os.path.join(last_checkpoint, "trainer_state.json")
+      if os.path.exists(state_path):
+        with open(state_path, "r", encoding="utf-8") as f:
+          state_data = json.load(f)
+        state_data["save_steps"] = cfg.training.save_steps
+        state_data["logging_steps"] = cfg.training.logging_steps
+        with open(state_path, "w", encoding="utf-8") as f:
+          json.dump(state_data, f, indent=2)
 
   trainer.train(resume_from_checkpoint=last_checkpoint)
 

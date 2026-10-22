@@ -87,6 +87,7 @@ def extract_words(text: str) -> List[str]:
 #   Vocabulary Adaptation).
 # ==================================================
 
+# In apply_subword_mean_initialisation() (tk_build-tokeniser.py):
 def apply_subword_mean_initialisation(
   model: PreTrainedModel,
   old_tok: PreTrainedTokenizerFast,
@@ -103,29 +104,32 @@ def apply_subword_mean_initialisation(
   output_embeddings = out_module.weight.data
 
   for token in added_tokens:
-    # 1. Get ID of new token in new tokeniser
     new_id = new_tok.convert_tokens_to_ids(token)
 
-    # 2. Tokenise same string using old tokeniser
-    #    That Ġ character conventionally represents whitespace :)
-    clean_token = token.replace("Ġ", " ") if "Ġ" in token else token
-
-    old_ids = old_tok.encode(clean_token, add_special_tokens=False)
+    # Decode byte-level BPE token
+    clean_text = old_tok.convert_tokens_to_string([token])
+    old_ids = old_tok.encode(clean_text, add_special_tokens=False)
 
     if not old_ids:
       continue
 
-    # 3. Fetch old embedding vectors
-    old_in_embeds = input_embeddings[old_ids]
-    old_out_embeds = output_embeddings[old_ids]
+    old_in_embeds = input_embeddings[old_ids].float()
+    old_out_embeds = output_embeddings[old_ids].float()
 
-    # 4. Compute mean across fragments
     mean_in_embed = old_in_embeds.mean(dim=0)
     mean_out_embed = old_out_embeds.mean(dim=0)
 
-    # 5. Assign the averaged vector to the new token's index
-    input_embeddings[new_id] = mean_in_embed
-    output_embeddings[new_id] = mean_out_embed
+    # Preserve average L2 norm of subwords so new tokens can compete in lm_head
+    target_in_norm = old_in_embeds.norm(dim=-1).mean()
+    target_out_norm = old_out_embeds.norm(dim=-1).mean()
+
+    if mean_in_embed.norm() > 0:
+      mean_in_embed = mean_in_embed * (target_in_norm / mean_in_embed.norm())
+    if mean_out_embed.norm() > 0:
+      mean_out_embed = mean_out_embed * (target_out_norm / mean_out_embed.norm())
+
+    input_embeddings[new_id] = mean_in_embed.to(input_embeddings.dtype)
+    output_embeddings[new_id] = mean_out_embed.to(output_embeddings.dtype)
 
 # ==================================================
 # fn build_bpe_extended_tokeniser()
@@ -179,7 +183,11 @@ def build_bpe_extended_tokeniser(base_tok: PreTrainedTokenizerFast, dataset: Lis
   candidates.sort(key=lambda x: x[1], reverse=True)
 
   added_tokens: List[str] = []
-  next_id = max(vocab.values()) + 1
+
+  # Account for tok_data["added_tokens"] when calculating next id
+  max_vocab_id = max(vocab.values())
+  max_added_id = max((t["id"] for t in tok_data.get("added_tokens", [])), default=-1)
+  next_id = max(max_vocab_id, max_added_id, len(base_tok) - 1) + 1
 
   for raw_surface, _ in candidates:
     if len(added_tokens) >= num_new_tokens:
@@ -243,9 +251,9 @@ def main():
   # 1. Load dataset(s)
   # [i] currently hardcoded to use all three MorisienMT Creole datasets
   dataset_paths = [
-    os.path.join(project_root, "datasets", "MorisienMT", "train.cr"),
+    os.path.join(project_root, "datasets", "MorisienMT", "train.fr-cr.cr"),
     os.path.join(project_root, "datasets", "MorisienMT", "dev.cr"),
-    os.path.join(project_root, "datasets", "train.en-cr.cr")
+    os.path.join(project_root, "datasets", "MorisienMT", "train.en-cr.cr")
   ]
   dataset = load_dataset(dataset_paths)
   if not dataset:
@@ -278,13 +286,14 @@ def main():
 
   # 6. Resize and apply CVA Subword Mean Initialisation
   logger.info(f"[Kestrel] Resizing embeddings from {len(old_tok):,} to {len(new_tok):,}...")
-  model.resize_token_embeddings(len(new_tok))
+  model.resize_token_embeddings(len(new_tok), mean_resizing=False)
 
   logger.info("[Kestrel] Applying Subword Mean Initialisation (CVA)...")
   apply_subword_mean_initialisation(model, old_tok, new_tok, new_tokens)
 
-  # 7. Export final model and tokeniser
+  # 7. Export final model and tokeniser (including updated vocab size)
   logger.info(f"[Kestrel] Saving CVA-adapted model and tokeniser to {output_path}...")
+  new_tok.init_kwargs["base_vocab_size"] = len(old_tok)
   model.save_pretrained(output_path)
   new_tok.save_pretrained(output_path)
 
