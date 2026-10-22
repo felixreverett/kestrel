@@ -23,7 +23,7 @@
     "lora_dropout": 0.05,
     "bias": "none",
     "task_type": "CAUSAL_LM",
-    "ensure_weight_tying": true,
+    "ensure_weight_tying": false,
     "train_new_tokens": true
   },
   "training": {
@@ -38,7 +38,7 @@
     "bf16": true,
     "loss_type": "nll",
     "save_strategy": "steps",
-    "save_steps": 500,
+    "save_steps": 250,
     "max_seq_length": 256
   }
 }
