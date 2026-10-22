@@ -1,0 +1,702 @@
+{
+  "overall": {
+    "bleu": 0.0,
+    "chrf++": 0.08850122199354857
+  },
+  "directions": {
+    "Mauritian Creole_to_English": {
+      "bleu": 0.0,
+      "chrf++": 0.06226926118759287
+    },
+    "English_to_Mauritian Creole": {
+      "bleu": 0.0,
+      "chrf++": 0.11665496722808202
+    }
+  },
+  "predictions": {
+    "Mauritian Creole_to_English": [
+      {
+        "input": "Ena mem ki tom lor bann serviter, maltret zot e touy zot.",
+        "reference": "Others grabbed the servants, then beat them up and killed them.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Les li arive kouma to finn dir, e anz la kit li ale.",
+        "reference": "Let it happen as you have said, and the angel left her.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Dram dan tou sa zafer la: se bann zanfan pov, ki zot paran trime pou donn zot enn ledikasion tertier peyant avek lespwar pou gagn enn travay reminerater, ki premie viktim bann arnak fer dan nom ansegnman siperier.",
+        "reference": "The tragedy in all this : it is the poor children whose parents toil to pay a tertiary education in the hope of gainful employment, which are the first victims of scams perpetrated in the name of higher education.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Dimounn ki anvi gagn laglwar pou imilie li, dimounn ki imilie li pou gagn laglwar.",
+        "reference": "If you put yourself above others, you will be put down, but if you humble yourself, you will be honoured.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Lerla mo pou dir zot, mo pa pou ena nanye pou fer ar zot! sorti la ale, zot bann Demon.",
+        "reference": "But I will tell them, I will have nothing to do with you! Get out of my sight, you evil people!",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Bann gardien koson sove, zot al dan lavil e zot rakont tou seki finn pase avek sa de posede la. ",
+        "reference": "The caretakers of the pigs ran to the town and told everything, especially what had happened to the two men.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Enn gro lavwa dir: “Kisannla pe manz fey dan mo zardin?”.",
+        "reference": "A big voice says: “Who’s eating leaves in my garden?”",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li dir zot, finn ekrir, pou apel mo lakaz, enn lakaz lapriyer.",
+        "reference": "He told them, the Scriptures say, my house should be called a place of worship.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Lor konsey so mama, li ti fer sa demann la: donn mwa, asterlamem latet Zan Batis lor enn plato.",
+        "reference": "But the girl's mother told her to say: here on a dish I want the head of John the Baptist.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot bizin enn sign parski zot move e zot pa pou krwar.",
+        "reference": "You want a sign because you are evil and won't believe.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Bienere zot ki pov dan zot lespri, Rwayom Bondie li pou zot. ",
+        "reference": "Those who are poor in their mind, the kingdom of God is for you.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Ki pli inportan, Lor oubien tanp ki rann lor la sakre?",
+        "reference": "Which is more important, the gold or the temple that makes the gold sacred?",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot ti pran Zezi zot ti amenn li Zerizalem pou prezant li devan Lesegner.",
+        "reference": "They took Jesus to the temple in Jerusalem and presented him to the Lord.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li get depi adrwat, e apre depi agos ziska adrwat... Aaaa!.. li’nn gayn enn lide. ",
+        "reference": "He looks from right to left and then from left to right... A Ha!... he gets an idea.",
+        "prediction": "Hect``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Konsey minis ti anonse Vendredi dernie larive bann exper Britanik pou fer enn lodit tou bann institision ki oper dan sekter servis.",
+        "reference": "The Council of Ministers announced last Friday the arrival of British experts to audit of all institutions operating in the service sector.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Enn lavil ki finn konstrir lor enn montagn pa kapav kasiet. ",
+        "reference": "A city built on top of a hill cannot be hidden.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Sef pret et bann pret reponn, li pou masakre sa bann kriminel la.",
+        "reference": "The chief priests and leaders answered, he will kill them in some horrible way.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Laverite mo dir zot, osi lontan ki later ek lesiel existe, nanye pa pou retire dan lalwa, pa mem sa ti pwin lor i, ziska tou akonpli.",
+        "reference": "Truth I tell you, as long as Heaven and earth exists, nothing will be removed from the Law, not even the dot on i, until everything is accomplished.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Ti ena enn troupo koson ki ti pe manze dan lezanviron.",
+        "reference": "Not far from there a large herd of pigs was feeding.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zakari retourn kot li letan so tour servi dan tanp ti fini.",
+        "reference": "When Zechariah's time of service in the temple was over, he went home.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Sa zetwal ki zot finn trouve dan les ti pe avanse devan zot ziska li ti aret zis lao landrwa kot zanfan la ti ete. ",
+        "reference": "And the star they had seen in the east went on ahead of them until it stopped over the place where the child was.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Lafoul ti etone, zot dir, zame kitsoz koumsa finn arive dan Izrael.",
+        "reference": "The crowds were so amazed that they began saying, nothing like this has ever happened in Israel.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zezi pa reponn lor okenn pwin e so silans ti bien inpresionn gouverner.",
+        "reference": "But Jesus did not say anything, and the governor was greatly amazed.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Lot kote, bann dimounn-la panse ki Zan ti enn profet, e nou ti per seki li kapav fer nou.",
+        "reference": "On the other hand, these people think that John was a prophet, and we are afraid of what they might do to us.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li reponn, non, parski letan zot ras move lerb la, zot kapav derasinn osi bann pie dible.",
+        "reference": "No, he answered, when you pull up the bad weeds you might also pull up the wheat.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Sakula Zoko kalkile mem, me li osi, li pa kone ki bizin fer.",
+        "reference": "This time Zoko thinks hard but even she doesn’t know what to do.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li osi met de take, enn andan pou anpes lisyen rantre kan li e travay dan zardin, e enn lot an-deor, poukikan li ale, li kapav ferm li depi deor. ",
+        "reference": "He also puts two hooks, the one inside so that dogs cannot come in when he is working in his garden, and the other outside, so that when he goes away, he can close it from the outside.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot sorti dan zot tom e apre rezireksion Zezi, zot rant dan lavil sint kot boukou dimoun finn trouv zot.",
+        "reference": "Then after Jesus had risen to life, they came out of their graves and went into the holy city, where they were seen by many people.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Bay Goulam, ki ti bien kontan so madam ti fer tou pou fer li plezir. ",
+        "reference": "Bye Goolam, who really loved his wife, did everything to make her happy.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Apre ki Zezi finn arete, zot amenn li devan gran pret Kaif.",
+        "reference": "After Jesus had been arrested, he was led off to the house of Caiaphas the high priest.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot ranz moniman bann profet ek dekor tom bann bon dimounn.",
+        "reference": "You build monuments for the prophets and decorate the tombs of good people.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "res laba ziska ki mo dir twa retourne, parski Erod pou rod sa zanfan la pou touy li.",
+        "reference": "Stay there until I tell you to return, because Herod is looking for the child and to kill him.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li gagn kriz epileptik e souvan li  tom dan dife ou dan dilo. ",
+        "reference": "He has a bad case of epilepsy and often falls into a fire or into water.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Me mo dir zot si zot get enn lot fam e anvi li, zot deza infidel dan zot panse.",
+        "reference": "But I tell you that if you look at another woman and want her, you are already unfaithful in your thoughts.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Si lalimier ki sipoze dan twa finn vinn teneb, to dan teneb.",
+        "reference": "If the light inside you is dark, you are in the dark.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li tikontan Bondie e li ti pe atann Bondie vinn sov Izrael. ",
+        "reference": "He loved God and was waiting for God to save the people of Israel.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Enn zarb bon pa kapav prodwir move fri, e enn zarb pa bon pa kapav prodwir bon fri.",
+        "reference": "A good tree cannot produce bad fruit, and a bad tree cannot produce good fruit.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Enn sel kout, Zezi dimann zot pou vinn avek li.",
+        "reference": "At once Jesus asked them to come with him.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Dan gran klas bann zanfan ti bizen osi aste zot prop liv. ",
+        "reference": "In the older classes, the kids had to buy their own books too.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Apre zot sote, pile dan later kumadir zot pe sote lor enn matla. ",
+        "reference": "Then they jump up and down in the soil as if they were jumping on a mattress.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Me personn pa dir ki zot rann zot koupab kan zot kas lalwa.",
+        "reference": "But no one says that they are guilty of breaking the law of the Sabbath.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "E pourtan enn senp pon ki travers gorz Gran Raven, ennde sime ki pas ant bann kolinn pou desann lot kote ti pou kas nou izolman. ",
+        "reference": "And yet a simple bridge across Grande Ravine gorge or one or two roads through the hills leading down to the other side would have put an end to our isolation.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot ti dan enn gran lazwa kan zot trouv zetwal la.",
+        "reference": "They were thrilled and excited to see the star.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Ti ena dan nou vilaz enn lider ki ti pe dimann administrasion santral ouver enn lekol pou tou zanfan dan vilaz. ",
+        "reference": "We had a village head who was pushing the central government to open a school for all children in the village.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Dimounn ki akeyir enn fidel akoz li enn fidel li pou gagn rekonpans enn fidel.",
+        "reference": "Anyone who welcomes a good person just because that person is good will be given the same reward as a good person.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot pou dir zot finn pres lor to nom, e lor to nom nou finn sas bann move lespri e nou finn akonpli boukou mirak.",
+        "reference": "They will say we preached in your name, and in your name we forced out demons and performed many miracles.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li tom azenou devan li pou dimann li enn faver.",
+        "reference": "She knelt down and started begging him to do something for her.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot kapav dir sa montagn la, leve al zet twa dan lamer, sa pou arive.",
+        "reference": "You can tell this mountain to get up and jump into the sea, and it will.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Diab dir li, mo pou donn twa tousala, si to tom azenou pou ador mwa.",
+        "reference": "The devil said to him, I will give all this, if you will bow down and worship me.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Ki pou arive si so tizanfan les li enflianse par manier ek krwayans bannla ki manz bef ek koson? ",
+        "reference": "What would happen if his grandson let himself be influenced by the customs and beliefs of those people who ate cows and pigs?",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Koumsamem li ti al partou dan Galile, li ti pe proklam Bonn Nouvel dan zot sinagog e li ti pe sas demon.",
+        "reference": "Then Jesus went to Jewish meeting places everywhere in Galilee, where he preached and forced out demons.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Konsey minis ti deside, vandredi, pou fer enn lodit konple lor ledikasion tersier dan Moris.",
+        "reference": "The Council of Ministers decided on Friday to conduct a full audit of tertiary education in Mauritius.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zezi dir so bann disip, li bien difisil pou enn ris rant dan Rwayom lesiel.",
+        "reference": "Jesus said to his disciples, it's terribly hard for rich people to get into the kingdom of heaven.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zezi dir li, savedir bann sitwayin lib, pena pou peye.",
+        "reference": "Jesus replied, then their own people don't have to pay.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Okontrer, zot bizin per Bondie ki kapav detrir toulede zot nam ek lekor dan lanfer. ",
+        "reference": "Instead, you should fear God who can destroy both your body and your soul in hell.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zezi dimann so bann disip pou amenn manze-la kot li e li ordonn lafoul pou instal zotmem lor lerb.",
+        "reference": "Jesus asked his disciples to bring the food to him, and he told the crowd to sit down on the grass.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Li ti donn enn rapor angro pozitif e pa montre ledwa liniversite teknolozi.",
+        "reference": "It delivers an overall positive and no longer pointing at the University of Technology.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Me zot koumans trakas dibien materyel e zot toufe par lanvi pou vinn ris.",
+        "reference": "But they start worrying about the needs of this life and are fooled by the desire to get rich.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Dimounn-la tom azenou e sipliy li, pitie mwa, mo pou rann twa to larzan.",
+        "reference": "The man got down on his knees and began begging, have pity on me, and I will pay you back.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Pa kone kifer, zot ti apel sa “pran enn lasante”. ",
+        "reference": "I don't know why, but they called this “to your health”.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Ki Bondie beni sa dimoun ki vinn lor nom Lesegner.",
+        "reference": "God bless the one who comes in the name of the Lord.",
+        "prediction": "Godct``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Finalman, bann lizinn anseyman, dirize ar bann marsan an edikater, pe ranpli zot pos avek bann fos diplom lor ledo bann etidian, osi bien morisien ki etranze.",
+        "reference": "Ultimately,  education factories, managed by merchants disguised as educators, fill their pockets with smoky degrees on the backs of students, both in Mauritius and abroad.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Kan mo ti malad, zot finn pran mwa enn swin, e kan mo ti dan prizon zot finn visit mwa.",
+        "reference": "When I was sick, you took care of me, and when I was in jail, you visited me.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Rwayom lesiel, parey kouma lagrin moutard ki kikenn pran pou sem dan so karo.",
+        "reference": "The kingdom of heaven is like what happens when a farmer plants a mustard seed in a field.",
+        "prediction": "Thect``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Zot paret korek e zis pou lizie dimounn, me dan zotmem zot ranpli ar ipokrizi ek malonete.",
+        "reference": "Outside you look good, but inside you are evil and only pretend to be good.",
+        "prediction": "Theyct``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Onz disip Zezi al Galile, lor kolinn kot li finn donn zot randevou.",
+        "reference": "Jesus' eleven disciples went to a mountain in Galilee, where Jesus had told them to meet him.",
+        "prediction": "Elect``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Al dan bann lakrwaze sime e tou dimoun ki zot trouve invit zot dan lanos.",
+        "reference": "Go out to the street corners and tell everyone you meet to come to the banquet.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Lafoul ti emerveye ler zot trouv seki pe arive ek seki zot tande.",
+        "reference": "Everyone was amazed at what they saw and heard.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      }
+    ],
+    "English_to_Mauritian Creole": [
+      {
+        "input": "Others grabbed the servants, then beat them up and killed them.",
+        "reference": "Ena mem ki tom lor bann serviter, maltret zot e touy zot.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Let it happen as you have said, and the angel left her.",
+        "reference": "Les li arive kouma to finn dir, e anz la kit li ale.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The tragedy in all this : it is the poor children whose parents toil to pay a tertiary education in the hope of gainful employment, which are the first victims of scams perpetrated in the name of higher education.",
+        "reference": "Dram dan tou sa zafer la: se bann zanfan pov, ki zot paran trime pou donn zot enn ledikasion tertier peyant avek lespwar pou gagn enn travay reminerater, ki premie viktim bann arnak fer dan nom ansegnman siperier.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "If you put yourself above others, you will be put down, but if you humble yourself, you will be honoured.",
+        "reference": "Dimounn ki anvi gagn laglwar pou imilie li, dimounn ki imilie li pou gagn laglwar.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "But I will tell them, I will have nothing to do with you! Get out of my sight, you evil people!",
+        "reference": "Lerla mo pou dir zot, mo pa pou ena nanye pou fer ar zot! sorti la ale, zot bann Demon.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The caretakers of the pigs ran to the town and told everything, especially what had happened to the two men.",
+        "reference": "Bann gardien koson sove, zot al dan lavil e zot rakont tou seki finn pase avek sa de posede la. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "A big voice says: “Who’s eating leaves in my garden?”",
+        "reference": "Enn gro lavwa dir: “Kisannla pe manz fey dan mo zardin?”.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "He told them, the Scriptures say, my house should be called a place of worship.",
+        "reference": "Li dir zot, finn ekrir, pou apel mo lakaz, enn lakaz lapriyer.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "But the girl's mother told her to say: here on a dish I want the head of John the Baptist.",
+        "reference": "Lor konsey so mama, li ti fer sa demann la: donn mwa, asterlamem latet Zan Batis lor enn plato.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "You want a sign because you are evil and won't believe.",
+        "reference": "Zot bizin enn sign parski zot move e zot pa pou krwar.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Those who are poor in their mind, the kingdom of God is for you.",
+        "reference": "Bienere zot ki pov dan zot lespri, Rwayom Bondie li pou zot. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Which is more important, the gold or the temple that makes the gold sacred?",
+        "reference": "Ki pli inportan, Lor oubien tanp ki rann lor la sakre?",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "They took Jesus to the temple in Jerusalem and presented him to the Lord.",
+        "reference": "Zot ti pran Zezi zot ti amenn li Zerizalem pou prezant li devan Lesegner.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "He looks from right to left and then from left to right... A Ha!... he gets an idea.",
+        "reference": "Li get depi adrwat, e apre depi agos ziska adrwat... Aaaa!.. li’nn gayn enn lide. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The Council of Ministers announced last Friday the arrival of British experts to audit of all institutions operating in the service sector.",
+        "reference": "Konsey minis ti anonse Vendredi dernie larive bann exper Britanik pou fer enn lodit tou bann institision ki oper dan sekter servis.",
+        "prediction": "Lan``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "A city built on top of a hill cannot be hidden.",
+        "reference": "Enn lavil ki finn konstrir lor enn montagn pa kapav kasiet. ",
+        "prediction": "unctionct``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The chief priests and leaders answered, he will kill them in some horrible way.",
+        "reference": "Sef pret et bann pret reponn, li pou masakre sa bann kriminel la.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Truth I tell you, as long as Heaven and earth exists, nothing will be removed from the Law, not even the dot on i, until everything is accomplished.",
+        "reference": "Laverite mo dir zot, osi lontan ki later ek lesiel existe, nanye pa pou retire dan lalwa, pa mem sa ti pwin lor i, ziska tou akonpli.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Not far from there a large herd of pigs was feeding.",
+        "reference": "Ti ena enn troupo koson ki ti pe manze dan lezanviron.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "When Zechariah's time of service in the temple was over, he went home.",
+        "reference": "Zakari retourn kot li letan so tour servi dan tanp ti fini.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "And the star they had seen in the east went on ahead of them until it stopped over the place where the child was.",
+        "reference": "Sa zetwal ki zot finn trouve dan les ti pe avanse devan zot ziska li ti aret zis lao landrwa kot zanfan la ti ete. ",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The crowds were so amazed that they began saying, nothing like this has ever happened in Israel.",
+        "reference": "Lafoul ti etone, zot dir, zame kitsoz koumsa finn arive dan Izrael.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "But Jesus did not say anything, and the governor was greatly amazed.",
+        "reference": "Zezi pa reponn lor okenn pwin e so silans ti bien inpresionn gouverner.",
+        "prediction": "unctionct``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "On the other hand, these people think that John was a prophet, and we are afraid of what they might do to us.",
+        "reference": "Lot kote, bann dimounn-la panse ki Zan ti enn profet, e nou ti per seki li kapav fer nou.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "No, he answered, when you pull up the bad weeds you might also pull up the wheat.",
+        "reference": "Li reponn, non, parski letan zot ras move lerb la, zot kapav derasinn osi bann pie dible.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "This time Zoko thinks hard but even she doesn’t know what to do.",
+        "reference": "Sakula Zoko kalkile mem, me li osi, li pa kone ki bizin fer.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "He also puts two hooks, the one inside so that dogs cannot come in when he is working in his garden, and the other outside, so that when he goes away, he can close it from the outside.",
+        "reference": "Li osi met de take, enn andan pou anpes lisyen rantre kan li e travay dan zardin, e enn lot an-deor, poukikan li ale, li kapav ferm li depi deor. ",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Then after Jesus had risen to life, they came out of their graves and went into the holy city, where they were seen by many people.",
+        "reference": "Zot sorti dan zot tom e apre rezireksion Zezi, zot rant dan lavil sint kot boukou dimoun finn trouv zot.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Bye Goolam, who really loved his wife, did everything to make her happy.",
+        "reference": "Bay Goulam, ki ti bien kontan so madam ti fer tou pou fer li plezir. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "After Jesus had been arrested, he was led off to the house of Caiaphas the high priest.",
+        "reference": "Apre ki Zezi finn arete, zot amenn li devan gran pret Kaif.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "You build monuments for the prophets and decorate the tombs of good people.",
+        "reference": "Zot ranz moniman bann profet ek dekor tom bann bon dimounn.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Stay there until I tell you to return, because Herod is looking for the child and to kill him.",
+        "reference": "res laba ziska ki mo dir twa retourne, parski Erod pou rod sa zanfan la pou touy li.",
+        "prediction": "Ran``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "He has a bad case of epilepsy and often falls into a fire or into water.",
+        "reference": "Li gagn kriz epileptik e souvan li  tom dan dife ou dan dilo. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "But I tell you that if you look at another woman and want her, you are already unfaithful in your thoughts.",
+        "reference": "Me mo dir zot si zot get enn lot fam e anvi li, zot deza infidel dan zot panse.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "If the light inside you is dark, you are in the dark.",
+        "reference": "Si lalimier ki sipoze dan twa finn vinn teneb, to dan teneb.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "He loved God and was waiting for God to save the people of Israel.",
+        "reference": "Li tikontan Bondie e li ti pe atann Bondie vinn sov Izrael. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "A good tree cannot produce bad fruit, and a bad tree cannot produce good fruit.",
+        "reference": "Enn zarb bon pa kapav prodwir move fri, e enn zarb pa bon pa kapav prodwir bon fri.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "At once Jesus asked them to come with him.",
+        "reference": "Enn sel kout, Zezi dimann zot pou vinn avek li.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "In the older classes, the kids had to buy their own books too.",
+        "reference": "Dan gran klas bann zanfan ti bizen osi aste zot prop liv. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Then they jump up and down in the soil as if they were jumping on a mattress.",
+        "reference": "Apre zot sote, pile dan later kumadir zot pe sote lor enn matla. ",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "But no one says that they are guilty of breaking the law of the Sabbath.",
+        "reference": "Me personn pa dir ki zot rann zot koupab kan zot kas lalwa.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "And yet a simple bridge across Grande Ravine gorge or one or two roads through the hills leading down to the other side would have put an end to our isolation.",
+        "reference": "E pourtan enn senp pon ki travers gorz Gran Raven, ennde sime ki pas ant bann kolinn pou desann lot kote ti pou kas nou izolman. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "They were thrilled and excited to see the star.",
+        "reference": "Zot ti dan enn gran lazwa kan zot trouv zetwal la.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "We had a village head who was pushing the central government to open a school for all children in the village.",
+        "reference": "Ti ena dan nou vilaz enn lider ki ti pe dimann administrasion santral ouver enn lekol pou tou zanfan dan vilaz. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Anyone who welcomes a good person just because that person is good will be given the same reward as a good person.",
+        "reference": "Dimounn ki akeyir enn fidel akoz li enn fidel li pou gagn rekonpans enn fidel.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "They will say we preached in your name, and in your name we forced out demons and performed many miracles.",
+        "reference": "Zot pou dir zot finn pres lor to nom, e lor to nom nou finn sas bann move lespri e nou finn akonpli boukou mirak.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "She knelt down and started begging him to do something for her.",
+        "reference": "Li tom azenou devan li pou dimann li enn faver.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "You can tell this mountain to get up and jump into the sea, and it will.",
+        "reference": "Zot kapav dir sa montagn la, leve al zet twa dan lamer, sa pou arive.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The devil said to him, I will give all this, if you will bow down and worship me.",
+        "reference": "Diab dir li, mo pou donn twa tousala, si to tom azenou pou ador mwa.",
+        "prediction": "Devct``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "What would happen if his grandson let himself be influenced by the customs and beliefs of those people who ate cows and pigs?",
+        "reference": "Ki pou arive si so tizanfan les li enflianse par manier ek krwayans bannla ki manz bef ek koson? ",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Then Jesus went to Jewish meeting places everywhere in Galilee, where he preached and forced out demons.",
+        "reference": "Koumsamem li ti al partou dan Galile, li ti pe proklam Bonn Nouvel dan zot sinagog e li ti pe sas demon.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The Council of Ministers decided on Friday to conduct a full audit of tertiary education in Mauritius.",
+        "reference": "Konsey minis ti deside, vandredi, pou fer enn lodit konple lor ledikasion tersier dan Moris.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Jesus said to his disciples, it's terribly hard for rich people to get into the kingdom of heaven.",
+        "reference": "Zezi dir so bann disip, li bien difisil pou enn ris rant dan Rwayom lesiel.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Jesus replied, then their own people don't have to pay.",
+        "reference": "Zezi dir li, savedir bann sitwayin lib, pena pou peye.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Instead, you should fear God who can destroy both your body and your soul in hell.",
+        "reference": "Okontrer, zot bizin per Bondie ki kapav detrir toulede zot nam ek lekor dan lanfer. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Jesus asked his disciples to bring the food to him, and he told the crowd to sit down on the grass.",
+        "reference": "Zezi dimann so bann disip pou amenn manze-la kot li e li ordonn lafoul pou instal zotmem lor lerb.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "It delivers an overall positive and no longer pointing at the University of Technology.",
+        "reference": "Li ti donn enn rapor angro pozitif e pa montre ledwa liniversite teknolozi.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "But they start worrying about the needs of this life and are fooled by the desire to get rich.",
+        "reference": "Me zot koumans trakas dibien materyel e zot toufe par lanvi pou vinn ris.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The man got down on his knees and began begging, have pity on me, and I will pay you back.",
+        "reference": "Dimounn-la tom azenou e sipliy li, pitie mwa, mo pou rann twa to larzan.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "I don't know why, but they called this “to your health”.",
+        "reference": "Pa kone kifer, zot ti apel sa “pran enn lasante”. ",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "God bless the one who comes in the name of the Lord.",
+        "reference": "Ki Bondie beni sa dimoun ki vinn lor nom Lesegner.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Ultimately,  education factories, managed by merchants disguised as educators, fill their pockets with smoky degrees on the backs of students, both in Mauritius and abroad.",
+        "reference": "Finalman, bann lizinn anseyman, dirize ar bann marsan an edikater, pe ranpli zot pos avek bann fos diplom lor ledo bann etidian, osi bien morisien ki etranze.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "When I was sick, you took care of me, and when I was in jail, you visited me.",
+        "reference": "Kan mo ti malad, zot finn pran mwa enn swin, e kan mo ti dan prizon zot finn visit mwa.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "The kingdom of heaven is like what happens when a farmer plants a mustard seed in a field.",
+        "reference": "Rwayom lesiel, parey kouma lagrin moutard ki kikenn pran pou sem dan so karo.",
+        "prediction": "Royact`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Outside you look good, but inside you are evil and only pretend to be good.",
+        "reference": "Zot paret korek e zis pou lizie dimounn, me dan zotmem zot ranpli ar ipokrizi ek malonete.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Jesus' eleven disciples went to a mountain in Galilee, where Jesus had told them to meet him.",
+        "reference": "Onz disip Zezi al Galile, lor kolinn kot li finn donn zot randevou.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Go out to the street corners and tell everyone you meet to come to the banquet.",
+        "reference": "Al dan bann lakrwaze sime e tou dimoun ki zot trouve invit zot dan lanos.",
+        "prediction": "````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      },
+      {
+        "input": "Everyone was amazed at what they saw and heard.",
+        "reference": "Lafoul ti emerveye ler zot trouv seki pe arive ek seki zot tande.",
+        "prediction": "ct```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+      }
+    ]
+  }
+}
